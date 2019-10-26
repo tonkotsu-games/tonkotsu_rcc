@@ -9,7 +9,7 @@ using System.Linq;
 public class CustomHierarchyColors : MonoBehaviour
 {
     private static Vector2 offset = new Vector2(0, 2);
-    private static bool white = false;
+    private static bool flicker = false;
 
     static CustomHierarchyColors()
     {
@@ -18,20 +18,21 @@ public class CustomHierarchyColors : MonoBehaviour
 
     private static void HandleHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
     {
-
         var obj = EditorUtility.InstanceIDToObject(instanceID);
-        if (obj != null)
+        if (obj != null && obj is GameObject go)
         {
-            white = UnityEngine.Random.value < 0.5f;
-            Rect newRect = new Rect(selectionRect.xMax - 100, selectionRect.y, 100, selectionRect.height);
+            float x = selectionRect.xMax - 10;
+            var effectors = go.GetComponents<IHierarchyEffector>();
 
-            EditorGUI.DropShadowLabel(newRect, "ERROR FIX MEE", new GUIStyle()
+            foreach (var effector in effectors)
             {
-                normal = new GUIStyleState() { textColor = white ? Color.white : Color.red }
-            });
-            
-            EditorApplication.RepaintHierarchyWindow();
+                var element = effector.GetHierarchyEffect();
+                if(element == null)
+                {
+                    continue;
+                }
+                x = element.DisplayAndReturnX(new Rect(x, selectionRect.y, selectionRect.width, selectionRect.height));
+            }
         }
-
     }
 }
