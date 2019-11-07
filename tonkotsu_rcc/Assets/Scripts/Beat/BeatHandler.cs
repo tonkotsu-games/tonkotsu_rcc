@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BeatAnalyse : MonoBehaviour
+public class BeatHandler : MonoBehaviour
 {
     [SerializeField]
     private int timeWindow = 0;
@@ -10,16 +10,12 @@ public class BeatAnalyse : MonoBehaviour
 
     public List<int> beatList = new List<int>();
 
-    [SerializeField]
-    private float limit = 0, waitSamples = 0;
     private float timeSample = 0;
     private float[] spectrum = null;
     private float sampleBeat = 0;
     [HideInInspector]
     public float sampleTimeInSec = 0;
 
-    [SerializeField]
-    private AudioClip wave = null;
     private AudioSource sourceWave = null;
 
     private bool debugMode = false;
@@ -30,26 +26,6 @@ public class BeatAnalyse : MonoBehaviour
     void Start()
     {
         sourceWave = GetComponent<AudioSource>();
-        int amount = wave.samples;
-        spectrum = new float[amount];
-        wave.GetData(spectrum, 0);
-
-        for (int i = 0; i < spectrum.Length; i++)
-        {
-            spectrum[i] = Mathf.Abs(spectrum[i]);
-        }
-
-        for (int i = 1; i < spectrum.Length - 1; i++)
-        {
-            if (spectrum[i] > limit)
-            {
-                if (spectrum[i] <= spectrum[i - 1] && spectrum[i] >= spectrum[i + 1])
-                {
-                    beatList.Add(i);
-                    i += (int)waitSamples;
-                }
-            }
-        }
         sampleBeat = Mathf.Abs(beatList[0] - beatList[1]);
         sampleTimeInSec = sampleBeat / 44100;
         beatListCopy = new List<int>(beatList);
