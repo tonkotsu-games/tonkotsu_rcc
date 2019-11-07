@@ -33,7 +33,9 @@ public class CheatMenu : Singleton<CheatMenu>
 
         //Button2: Toggle BeatDebugger (visual)
 
-        //Button3: GenerateCheats()
+        //Button3: ShowCheats (toggle)
+        //GUILayout.Toggle
+        //GUILayout.Button
     }
 
     private void GenerateCheats()

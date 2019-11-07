@@ -12,13 +12,13 @@ public class BeatAnalysisSO : AnalysisSO
     [Button]
     protected override void AnalyseClip()
     {
-        Debug.LogError("Beat Analysed!");
-
         if(Clip == null)
         {
-            hasBeenAnalysedOnce = false;
+            analysed = false;
             return;
         }
+
+        Debug.Log("Beat Analysed");
 
         //Analysis
         resultList = new List<int>();
@@ -43,7 +43,9 @@ public class BeatAnalysisSO : AnalysisSO
             }
         }
 
-        hasBeenAnalysedOnce = true;
+        analysed = true;
         lastClipName = Clip.name;
+
+        Debug.Log("Result: " + resultList.Count);
     }
 }

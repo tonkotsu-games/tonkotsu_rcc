@@ -3,40 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class AnalysisSO : ScriptableObject
+public abstract class AnalysisSO : ScriptableObject
 {
     [Header("Clip to Analyse-------")]
     [Tooltip("Clip that should be analysed.")]
     public AudioClip Clip;
 
     protected List<int> resultList;
-    [HideInInspector] 
-    public List<int> ResultList { get => resultList; }
 
     [ShowNonSerializedField] 
-    protected bool hasBeenAnalysedOnce;
+    protected bool analysed;
 
     protected string lastClipName = null;
 
     protected float[] spectrum = null;
 
+    public List<int> ResultList { get => resultList; }
 
-    [Button]
-    protected virtual void AnalyseClip()
-    {
-        throw new System.NotImplementedException();
-    }
-
+    protected abstract void AnalyseClip();
     
     protected virtual void OnValidate()
     {
         if(Clip == null)
         {
-            hasBeenAnalysedOnce = false;
+            analysed = false;
         }
         else if(lastClipName != Clip.name)
         {
-            hasBeenAnalysedOnce = false;
+            analysed = false;
             lastClipName = Clip.name;
         }
     }
