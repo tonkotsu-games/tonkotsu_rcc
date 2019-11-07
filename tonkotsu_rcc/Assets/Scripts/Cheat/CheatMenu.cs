@@ -76,23 +76,17 @@ public class CheatMenu : Singleton<CheatMenu>
                 SaveAllCheatMethods(components[i]);
             }
         }
-
-        DrawButtons(components);
     }
 
     private void SaveAllCheatMethods(Component component)
     {
         methods = component.GetType().GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         .Where(x => x.GetCustomAttribute<CheatMethodAttribute>() != null).ToArray();
-    }
 
-    private void DrawButtons(List<Component> components)
-    {
         foreach (var method in methods)
         {
-            //Implement Button Drawing HERE
             Debug.Log("Draw Buttons here instead");
-            method.Invoke(components, null);
+            method.Invoke(component, null);
         }
     }
 }
