@@ -8,27 +8,24 @@ public class BeatHandler : MonoBehaviour
     [SerializeField]
     private int reactionTime = 0;
 
-    public List<int> beatList = new List<int>();
+    [SerializeField]
+    private BeatAnalysisSO beatAnalysisSO;
+    [SerializeField]
+    private List<Texture2D> spectrumTexture;
 
-    private float timeSample = 0;
-    private float[] spectrum = null;
-    private float sampleBeat = 0;
-    [HideInInspector]
-    public float sampleTimeInSec = 0;
+    private static float timeSample = 0;
 
-    private AudioSource sourceWave = null;
+    private static AudioSource sourceWave = null;
 
     private bool debugMode = false;
     private bool copy = false;
 
-    public List<int> beatListCopy;
+    private static List<int> beatListCopy;
 
     void Start()
     {
         sourceWave = GetComponent<AudioSource>();
-        sampleBeat = Mathf.Abs(beatList[0] - beatList[1]);
-        sampleTimeInSec = sampleBeat / 44100;
-        beatListCopy = new List<int>(beatList);
+        beatListCopy = new List<int>(beatAnalysisSO.ResultList);
     }
 
     private void Update()
@@ -37,18 +34,18 @@ public class BeatHandler : MonoBehaviour
         {
             debugMode = !debugMode;
         }
-        if ((sourceWave.timeSamples >= beatList[beatList.Count - 1] && copy) || beatListCopy.Count == 0)
+        if ((sourceWave.timeSamples >= beatAnalysisSO.ResultList[beatAnalysisSO.ResultList.Count - 1] && copy) || beatListCopy.Count == 0)
         {
             copy = false;
-            beatListCopy = new List<int>(beatList);
+            beatListCopy = new List<int>(beatAnalysisSO.ResultList);
         }
-        if(sourceWave.timeSamples <= beatList[0] && !copy)
+        if (sourceWave.timeSamples <= beatAnalysisSO.ResultList[0] && !copy)
         {
             copy = true;
         }
     }
 
-    public bool IsOnBeat(int reactionTime, int timeWindow)
+    private static bool IsOnBeat(int reactionTime, int timeWindow)
     {
         timeSample = sourceWave.timeSamples - reactionTime;
         for (int i = 0; i < beatListCopy.Count; i++)
@@ -68,34 +65,27 @@ public class BeatHandler : MonoBehaviour
         return false;
     }
 
-    private void OnDrawGizmos()
+    private void OnGUI()
     {
         if (debugMode)
         {
-            if (spectrum == null)
-            {
-                return;
-            }
-            Vector3 displacement = Camera.main.ScreenToWorldPoint(new Vector3(100, 100, 5));
-            float heightMulti = 1;
-            float widthMulti = 0.000005f;
-            Gizmos.color = new Color(0.5f, 0, 0.5f, 1);
+            float heightMulti = 100;
+            float widthMulti = 1;
+            int sampleJump = 1800;
 
-            for (int i = 0; i < spectrum.Length; i += 100)
+            for (int i = 0; i * sampleJump < beatAnalysisSO.Spectrum.Length; i++)
             {
-                Gizmos.DrawLine(displacement + new Vector3(i * widthMulti, 0, 0),
-                                displacement + new Vector3(i * widthMulti, heightMulti * spectrum[i], 0));
+                if (i > Screen.width - 1)
+                {
+                    break;
+                }
+                GUI.DrawTexture(new Rect(i * widthMulti, 5, widthMulti, heightMulti * beatAnalysisSO.Spectrum[i * sampleJump]), spectrumTexture[0]);
             }
-
-            Gizmos.color = Color.green;
-            for (int i = 0; i < beatList.Count; i++)
+            for (int j = 0; j < beatAnalysisSO.ResultList.Count; j++)
             {
-                Gizmos.DrawLine(displacement + new Vector3((beatList[i] - timeWindow + reactionTime) * widthMulti, 0, 0),
-                                displacement + new Vector3((beatList[i] + timeWindow + reactionTime) * widthMulti, 0, 0));
+                GUI.DrawTexture(new Rect(beatAnalysisSO.ResultList[j] / sampleJump, 5, widthMulti, heightMulti), spectrumTexture[1]);
             }
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(displacement + new Vector3(sourceWave.timeSamples * widthMulti, 0, 0), displacement + new Vector3(sourceWave.timeSamples * widthMulti, heightMulti, 0));
+            GUI.DrawTexture(new Rect(sourceWave.timeSamples / sampleJump, 5, widthMulti, heightMulti * 1.1f), spectrumTexture[2]);
         }
     }
 }
