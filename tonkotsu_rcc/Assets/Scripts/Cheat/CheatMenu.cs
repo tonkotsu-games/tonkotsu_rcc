@@ -25,6 +25,17 @@ public class CheatMenu : Singleton<CheatMenu>
         }
     }
 
+    private void OpenCheats()
+    {
+        //3 Base buttons generated here (created by Benny soon^TM)
+
+        //Button1: Toggle Virtual Controller Visualization
+
+        //Button2: Toggle BeatDebugger (visual)
+
+        //Button3: GenerateCheats()
+    }
+
     private void GenerateCheats()
     {
         //Find all objects in scene
@@ -79,6 +90,7 @@ public class CheatMenu : Singleton<CheatMenu>
     {
         foreach (var method in methods)
         {
+            //Implement Button Drawing HERE
             Debug.Log("Draw Buttons here instead");
             method.Invoke(components, null);
         }
