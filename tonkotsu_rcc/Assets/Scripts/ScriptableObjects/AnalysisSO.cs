@@ -17,6 +17,7 @@ public abstract class AnalysisSO : ScriptableObject
     protected string lastClipName = null;
 
     protected float[] spectrum = null;
+    public float[] Spectrum { get => spectrum; }
 
     public List<int> ResultList { get => resultList; }
 

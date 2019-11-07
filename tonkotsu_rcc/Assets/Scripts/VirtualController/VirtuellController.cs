@@ -25,7 +25,7 @@ public class VirtuellController : MonoBehaviour
         }
     }
 
-    private void OnGUI()
+    public void DrawGUI()
     {
         inputPackage = inputProvider.GetPackage();
 
