@@ -7,19 +7,18 @@ using System.Reflection;
 using System.Linq;
 
 [InitializeOnLoad]
-public class MyHierarchyIcon
+public class HierarchyIcons
 {
     static Texture2D texture;
     static List<int> markedObjects;
 
-    static MyHierarchyIcon()
+    static HierarchyIcons()
     {
         // Init
-        texture = AssetDatabase.LoadAssetAtPath("Assets/3rd_Party/NaughtyAttributes/TestAssets/icon-github.png", typeof(Texture2D)) as Texture2D;
+        texture = AssetDatabase.LoadAssetAtPath("Assets/Scripts/Editor/Textures/ExclamationMark.png", typeof(Texture2D)) as Texture2D;
         EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
         markedObjects = new List<int>();
     }
-
 
     static void HierarchyItemCB(int instanceID, Rect selectionRect)
     {
