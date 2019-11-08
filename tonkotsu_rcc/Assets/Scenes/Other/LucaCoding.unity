@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cf700521e775d4e886a0ed16d9e102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 10000
-  onBeatRangeDelay: 2000
+  onBeatRangeWindow: 6000
+  onBeatRangeDelay: 0
   normalScale: {x: 1, y: 1, z: 1}
   onBeatScale: {x: 2, y: 2, z: 2}
 --- !u!135 &98619677
@@ -378,8 +378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cf700521e775d4e886a0ed16d9e102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 10000
-  onBeatRangeDelay: 4000
+  onBeatRangeWindow: 8000
+  onBeatRangeDelay: 0
   normalScale: {x: 1, y: 1, z: 1}
   onBeatScale: {x: 2, y: 2, z: 2}
 --- !u!135 &533148043
@@ -488,8 +488,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24efbebb3c1141b4b9e4953f2b38d130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 0
+  onBeatRangeWindow: 10000
   onBeatRangeDelay: 0
+  colorGradiant:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 0, g: 0.07144785, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
 --- !u!65 &563338768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -596,8 +625,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cf700521e775d4e886a0ed16d9e102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 10000
-  onBeatRangeDelay: 8000
+  onBeatRangeWindow: 4000
+  onBeatRangeDelay: 0
   normalScale: {x: 1, y: 1, z: 1}
   onBeatScale: {x: 2, y: 2, z: 2}
 --- !u!135 &627163825
@@ -706,7 +735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cf700521e775d4e886a0ed16d9e102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 10000
+  onBeatRangeWindow: 2000
   onBeatRangeDelay: 0
   normalScale: {x: 1, y: 1, z: 1}
   onBeatScale: {x: 2, y: 2, z: 2}
@@ -816,8 +845,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24efbebb3c1141b4b9e4953f2b38d130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 0
+  onBeatRangeWindow: 10000
   onBeatRangeDelay: 0
+  colorGradiant:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 30840
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 3
 --- !u!65 &745959934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1018,6 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba437350cd512a54d928ec25cb27ed82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
   timeWindow: 0
   reactionTime: 0
   beatAnalysisSO: {fileID: 11400000, guid: c31c0e173c34a1645848e29515d8351d, type: 2}
@@ -1165,6 +1224,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onBeatRangeWindow: 0
   onBeatRangeDelay: 0
+  colorGradiant:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
 --- !u!65 &1584004915
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1271,8 +1359,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24efbebb3c1141b4b9e4953f2b38d130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 0
+  onBeatRangeWindow: 10000
   onBeatRangeDelay: 0
+  colorGradiant:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 0.868332, b: 0, a: 1}
+    key2: {r: 0.19753337, g: 1, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 34502
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
 --- !u!65 &1812432999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1379,8 +1496,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24efbebb3c1141b4b9e4953f2b38d130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 0
+  onBeatRangeWindow: 10000
   onBeatRangeDelay: 0
+  colorGradiant:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 0, g: 1, b: 0.927727, a: 1}
+    key2: {r: 0, g: 0.09570742, b: 1, a: 0}
+    key3: {r: 0.87422657, g: 0, b: 1, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 21010
+    ctime2: 48188
+    ctime3: 65535
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2
 --- !u!65 &1987975283
 BoxCollider:
   m_ObjectHideFlags: 0

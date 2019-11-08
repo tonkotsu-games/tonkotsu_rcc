@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class ColorChangeOnBeat : BeatBehaviour
 {
+    [SerializeField] Gradient colorGradiant;
 
     MeshRenderer meshRenderer;
 
@@ -12,8 +14,10 @@ public class ColorChangeOnBeat : BeatBehaviour
         meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
-    protected override void OnBeat()
+    protected override void OnBeatRangeStay()
     {
-        meshRenderer.material.color = Color.HSVToRGB(Random.value, 1, 1);
+         Color c = colorGradiant.Evaluate(beatRangeCloseness);
+        meshRenderer.material.SetColor("_BaseColor", c);
     }
+
 }

@@ -8,9 +8,9 @@ public class SizeChangeOnBeat : BeatBehaviour
     [BoxGroup("SizeChangeOnBeat")]
     [SerializeField] Vector3 normalScale, onBeatScale;
 
-    protected override void OnBeatRangeEnter()
+    protected override void OnBeatRangeStay()
     {
-        transform.localScale = onBeatScale;
+        transform.localScale = Vector3.Lerp(normalScale, onBeatScale, beatRangeCloseness);
     }
 
     protected override void OnBeatRangeExit()

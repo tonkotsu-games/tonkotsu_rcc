@@ -13,6 +13,7 @@ public abstract class BeatBehaviour : MonoBehaviour
     [Tooltip("How many samples ahed is the OnBeatRange called? Shifts the OnBeatRange window forward in time")]
     [SerializeField] protected int onBeatRangeDelay;
 
+    protected float beatRangeCloseness;
     private bool isInBeatRange = false;
 
     protected virtual void Awake()
@@ -20,7 +21,7 @@ public abstract class BeatBehaviour : MonoBehaviour
         //subscribe to BeatHandler BeatHit event that doesnt exist right now with OnBeat
         //BeatHandler.BeatHit += OnBeat;
     }
-    
+
     protected virtual void OnDestroy()
     {
         //unsubscribe to BeatHandler BeatHit event
@@ -29,10 +30,10 @@ public abstract class BeatBehaviour : MonoBehaviour
 
     protected virtual void Update()
     {
-        //Works as soon as IsOnBeat is made public
 
-        /*
-        if (BeatHandler.IsOnBeat(onBeatRangeDelay, onBeatRangeWindow))
+        beatRangeCloseness = BeatHandler.BeatRangePercent(onBeatRangeDelay, onBeatRangeWindow);
+
+        if (beatRangeCloseness > 0)
         {
             if (isInBeatRange)
             {
@@ -53,7 +54,6 @@ public abstract class BeatBehaviour : MonoBehaviour
                 OnBeatRangeExit();
             }
         }
-        */
     }
 
     protected virtual void OnBeat() { }

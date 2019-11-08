@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class BeatHandler : MonoBehaviour
+public class BeatHandler : Singleton<BeatHandler>
 {
     [SerializeField]
     private int timeWindow = 0;
@@ -19,6 +20,7 @@ public class BeatHandler : MonoBehaviour
 
     private bool debugMode = false;
     private bool copy = false;
+
 
     private static List<int> beatListCopy;
 
@@ -63,6 +65,37 @@ public class BeatHandler : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public static float BeatRangePercent(int onBeatRangeDelay, int onBeatRangeWindow)
+    {
+        var beats = Instance.beatAnalysisSO.ResultList;
+        timeSample = sourceWave.timeSamples - onBeatRangeDelay;
+        for (int i = 0; i < beats.Count; i++)
+        {
+            float total = onBeatRangeWindow * 2;
+            float value = timeSample - (beats[i] - onBeatRangeWindow);
+
+            //if outside of +- window, return 0
+            if(value < 0 || value > total)
+            {
+                continue;
+            }
+            //else return a value with 1 when close to the exact beat and 0 when further away
+            else
+            {
+              
+                var normalizedValue = value / total;
+                var minus1to1 = (normalizedValue - 0.5f) * 2;
+                //go from -1 to 1 -> 0 to 1 with 1 being closer to the previous 0. Practically: Absolute values only and inversion of graph.
+                var final = 1 - (Mathf.Abs(minus1to1));
+
+                return final;
+            }
+        }
+
+        return 0;
+
     }
 
     private void OnGUI()
