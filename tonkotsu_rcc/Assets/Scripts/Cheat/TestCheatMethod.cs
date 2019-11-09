@@ -5,14 +5,14 @@ using UnityEngine;
 public class TestCheatMethod : MonoBehaviour
 {
     [CheatMethod] 
-    void Cheat()
+    public void Cheat()
     {
-        Debug.LogError("Cheater!");
+        Debug.LogError("Cheater1!");
     }
 
     [CheatMethod] 
     public void Cheat2()
     {
-        Debug.LogError("Cheater!");
+        Debug.LogError("Cheater2!");
     }
 }

@@ -13,12 +13,15 @@ public class BeatHandler : Singleton<BeatHandler>
     private BeatAnalysisSO beatAnalysisSO;
     [SerializeField]
     private List<Texture2D> spectrumTexture;
+    [SerializeField]
+    [Range(0, 300)]
+    private int visualOffsetX = 0;
 
     private static float timeSample = 0;
 
     private static AudioSource sourceWave = null;
 
-    private bool debugMode = false;
+    private static bool beatVisualize = false;
     private bool copy = false;
 
 
@@ -32,10 +35,6 @@ public class BeatHandler : Singleton<BeatHandler>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F4))
-        {
-            debugMode = !debugMode;
-        }
         if ((sourceWave.timeSamples >= beatAnalysisSO.ResultList[beatAnalysisSO.ResultList.Count - 1] && copy) || beatListCopy.Count == 0)
         {
             copy = false;
@@ -100,7 +99,7 @@ public class BeatHandler : Singleton<BeatHandler>
 
     private void OnGUI()
     {
-        if (debugMode)
+        if (beatVisualize)
         {
             float heightMulti = 100;
             float widthMulti = 1;
@@ -112,13 +111,18 @@ public class BeatHandler : Singleton<BeatHandler>
                 {
                     break;
                 }
-                GUI.DrawTexture(new Rect(i * widthMulti, 5, widthMulti, heightMulti * beatAnalysisSO.Spectrum[i * sampleJump]), spectrumTexture[0]);
+                GUI.DrawTexture(new Rect(visualOffsetX + i * widthMulti, 5, widthMulti, heightMulti * beatAnalysisSO.Spectrum[i * sampleJump]), spectrumTexture[0]);
             }
             for (int j = 0; j < beatAnalysisSO.ResultList.Count; j++)
             {
-                GUI.DrawTexture(new Rect(beatAnalysisSO.ResultList[j] / sampleJump, 5, widthMulti, heightMulti), spectrumTexture[1]);
+                GUI.DrawTexture(new Rect(visualOffsetX + beatAnalysisSO.ResultList[j] / sampleJump, 5, widthMulti, heightMulti), spectrumTexture[1]);
             }
-            GUI.DrawTexture(new Rect(sourceWave.timeSamples / sampleJump, 5, widthMulti, heightMulti * 1.1f), spectrumTexture[2]);
+            GUI.DrawTexture(new Rect(visualOffsetX + sourceWave.timeSamples / sampleJump, 5, widthMulti, heightMulti * 1.1f), spectrumTexture[2]);
         }
+    }
+
+    public static void BeatVisualize()
+    {
+        beatVisualize = !beatVisualize;
     }
 }

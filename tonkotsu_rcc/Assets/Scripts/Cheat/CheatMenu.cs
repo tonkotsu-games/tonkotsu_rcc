@@ -7,10 +7,14 @@ using System.Linq;
 
 public class CheatMenu : Singleton<CheatMenu>
 {
-    MethodInfo[] methods;
+    //public MethodInfo[] methods;
 
     List<int> markedObjects;
+    List<MethodInfo> methodsList = new List<MethodInfo>();
+    List<Component> componentListToMethod = new List<Component>();
 
+    private bool cheatMenuOpen = false;
+    private bool drawCheatButtons = false;
 
     public CheatMenu()
     {
@@ -19,23 +23,30 @@ public class CheatMenu : Singleton<CheatMenu>
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.F9))
         {
             GenerateCheats();
+            cheatMenuOpen = !cheatMenuOpen;
         }
     }
 
     private void OpenCheats()
     {
-        //3 Base buttons generated here (created by Benny soon^TM)
-
         //Button1: Toggle Virtual Controller Visualization
-
+        if (GUI.Button(new Rect(10, 10, 150, 50), "Virtual Controller"))
+        {
+            VirtuellController.DrawController();
+        }
         //Button2: Toggle BeatDebugger (visual)
-
+        if (GUI.Button(new Rect(10, 70, 150, 50), "Visualize Beat"))
+        {
+            BeatHandler.BeatVisualize();
+        }
         //Button3: ShowCheats (toggle)
-        //GUILayout.Toggle
-        //GUILayout.Button
+        if (GUI.Button(new Rect(10, 130, 150, 50), "Show Cheats"))
+        {
+            drawCheatButtons = !drawCheatButtons;
+        }
     }
 
     private void GenerateCheats()
@@ -82,13 +93,52 @@ public class CheatMenu : Singleton<CheatMenu>
 
     private void SaveAllCheatMethods(Component component)
     {
-        methods = component.GetType().GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+        MethodInfo[] methods = component.GetType().GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
         .Where(x => x.GetCustomAttribute<CheatMethodAttribute>() != null).ToArray();
 
         foreach (var method in methods)
         {
-            Debug.Log("Draw Buttons here instead");
-            method.Invoke(component, null);
+            if (!methodsList.Contains(method))
+            {
+                methodsList.Add(method);
+                componentListToMethod.Add(component);
+            }
+        }
+    }
+
+    private void OnGUI()
+    {
+        if (cheatMenuOpen)
+        {
+            OpenCheats();
+        }
+        if(drawCheatButtons)
+        {
+            DrawCheatButtons();
+        }
+    }
+    private void DrawCheatButtons()
+    {
+        int offsetX = 0;
+        int offsetY = 0;
+        int index = 0;
+        int buttonsInRow = 10;
+        int allowedButtons = buttonsInRow;
+        foreach(var method in methodsList)
+        {
+            if(GUI.Button(new Rect(200 + offsetX, 130 + offsetY, 150, 50), method.ToString()))
+            {
+                method.Invoke(componentListToMethod[index], null);
+            }
+            offsetY += 60;
+
+            if (index == allowedButtons)
+            {
+                offsetX += 200;
+                offsetY = 0;
+                allowedButtons += buttonsInRow;
+            }
+            index += 1;
         }
     }
 }
