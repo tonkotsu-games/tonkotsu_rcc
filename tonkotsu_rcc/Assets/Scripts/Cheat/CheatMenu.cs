@@ -7,18 +7,28 @@ using System.Linq;
 
 public class CheatMenu : Singleton<CheatMenu>
 {
-    //public MethodInfo[] methods;
+    [SerializeField] VirtualController virtualController;
+    [SerializeField] Texture2D[] virtualControllerTextures;
 
     List<int> markedObjects;
     List<MethodInfo> methodsList = new List<MethodInfo>();
     List<Component> componentListToMethod = new List<Component>();
 
-    private bool cheatMenuOpen = false;
-    private bool drawCheatButtons = false;
+    bool cheatMenuOpen;
+    bool drawCheatButtons;
+    bool drawController;
 
-    public CheatMenu()
+    protected override void Awake()
     {
+        base.Awake();
+
         markedObjects = new List<int>();
+
+        if(virtualController == null)
+        {
+            virtualController = gameObject.AddComponent<VirtualController>();
+            virtualController.ChangeInputType(VirtualControllerInputType.Player);
+        }
     }
 
     private void Update()
@@ -35,7 +45,8 @@ public class CheatMenu : Singleton<CheatMenu>
         //Button1: Toggle Virtual Controller Visualization
         if (GUI.Button(new Rect(10, 10, 150, 50), "Virtual Controller"))
         {
-            VirtuellController.DrawController();
+            drawController = !drawController;
+
         }
         //Button2: Toggle BeatDebugger (visual)
         if (GUI.Button(new Rect(10, 70, 150, 50), "Visualize Beat"))
@@ -47,6 +58,7 @@ public class CheatMenu : Singleton<CheatMenu>
         {
             drawCheatButtons = !drawCheatButtons;
         }
+
     }
 
     private void GenerateCheats()
@@ -112,10 +124,17 @@ public class CheatMenu : Singleton<CheatMenu>
         {
             OpenCheats();
         }
+
         if(drawCheatButtons)
         {
             DrawCheatButtons();
         }
+
+        if (drawController)
+        {
+            virtualController.DrawGUI(virtualControllerTextures);
+        }
+
     }
     private void DrawCheatButtons()
     {

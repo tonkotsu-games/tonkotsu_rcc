@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4592987949956247764}
   - component: {fileID: 4592987949956247765}
-  - component: {fileID: 4592987949956247766}
   m_Layer: 0
-  m_Name: VirtualController
+  m_Name: __VirtualController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c5f3a7a3eb09c4aa7dba23f43b330c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingInputType: 1
   controller:
   - {fileID: 2800000, guid: 747f1cbd52f8841429c2159053528b40, type: 3}
   - {fileID: 2800000, guid: 42fb87fdb138c954fa7a4586e0b1e6c6, type: 3}
@@ -60,15 +60,3 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 7cf733a8ca9e97642a2d85614e27b1c9, type: 3}
   - {fileID: 2800000, guid: fcef742d03dca764285a85ca415bb978, type: 3}
   - {fileID: 2800000, guid: 7f147f064181bca45beae58e203a198f, type: 3}
---- !u!114 &4592987949956247766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592987949956247771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c5d762bfe2a57748ae7fb8c52f9dfef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
