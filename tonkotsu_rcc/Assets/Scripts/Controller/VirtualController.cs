@@ -42,7 +42,7 @@ public class VirtualController : MonoBehaviour
         GUI.DrawTexture(new Rect(35, 800, 455, 275), controllerTextures[0]);
         GUI.DrawTexture(new Rect(245, 820, 30, 30), controllerTextures[10]);
 
-        if (currentPackage.LeftStickMoved())
+        if (currentPackage.LeftStickButton)
         {
             ShowAction(115, 850, 70, 70, controllerTextures[1]);
         }
@@ -60,7 +60,7 @@ public class VirtualController : MonoBehaviour
             GUI.DrawTexture(new Rect(130, 865, 40, 40), controllerTextures[2]);
         }
 
-        if (currentPackage.RightStickMoved())
+        if (currentPackage.RightStickButton)
         {
             ShowAction(280, 915, 70, 70, controllerTextures[1]);
         }
@@ -174,7 +174,7 @@ public class VirtualController : MonoBehaviour
             GUI.DrawTexture(new Rect(335, 765, 75, 40), controllerTextures[12]);
         }
 
-        if (currentPackage.LT >= 0.4f)
+        if (currentPackage.LTPressed())
         {
             ShowAction(130, 710, 50, 65, controllerTextures[13]);
         }
@@ -183,7 +183,7 @@ public class VirtualController : MonoBehaviour
             GUI.DrawTexture(new Rect(130, 710, 50, 65), controllerTextures[13]);
         }
 
-        if (currentPackage.RT >= 0.4f)
+        if (currentPackage.RTPressed())
         {
             ShowAction(340, 710, 50, 65, controllerTextures[14]);
         }
@@ -220,4 +220,3 @@ public static class VirtualControllerInputTypeMethods
         }
     }
 }
-

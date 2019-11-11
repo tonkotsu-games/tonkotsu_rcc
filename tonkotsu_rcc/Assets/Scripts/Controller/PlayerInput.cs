@@ -23,6 +23,9 @@ public class PlayerInput : IInputProvider
         input.X = GetButton("X");
         input.Y = GetButton("Y");
 
+        input.LeftStickButton = GetButton("MoveButton");
+        input.RightStickButton = GetButton("CameraButton");
+
         input.Start = GetButton("Start");
         input.Back = GetButton("Select");
 
@@ -43,5 +46,4 @@ public class PlayerInput : IInputProvider
     {
         return Input.GetButton(inputStr);
     }
-
 }

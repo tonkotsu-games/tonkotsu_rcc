@@ -18,6 +18,9 @@ public struct InputPackage
     public bool X;
     public bool Y;
 
+    public bool LeftStickButton;
+    public bool RightStickButton;
+
     public bool Start;
     public bool Back;
 
@@ -36,5 +39,15 @@ public struct InputPackage
     public bool DPadMoved()
     {
         return DPad.magnitude > 0.1f;
+    }
+
+    public bool LTPressed()
+    {
+        return LT > 0.3f;
+    }
+
+    public bool RTPressed()
+    {
+        return RT > 0.3f;
     }
 }

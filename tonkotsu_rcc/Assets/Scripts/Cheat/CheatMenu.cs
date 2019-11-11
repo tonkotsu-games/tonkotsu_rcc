@@ -33,7 +33,7 @@ public class CheatMenu : Singleton<CheatMenu>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F9))
+        if (Input.GetKeyDown(KeyCode.F8))
         {
             GenerateCheats();
             cheatMenuOpen = !cheatMenuOpen;
