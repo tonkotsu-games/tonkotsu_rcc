@@ -9,19 +9,20 @@ public class BeatAnalysisSO : AnalysisSO
     [SerializeField]
     private float limit = 0.4f, waitSamples = 5000f;
 
-    [Button]
-    protected override void AnalyseClip()
+
+    public override List<int> AnalyseClip()
     {
         if(Clip == null)
         {
             analysed = false;
-            return;
+            Debug.LogError("No Clip");
+            return null;
         }
 
         Debug.Log("Beat Analysed");
 
         //Analysis
-        resultList = new List<int>();
+        List<int> results = new List<int>();
         int amount = Clip.samples;
         spectrum = new float[amount];
         Clip.GetData(spectrum, 0);
@@ -37,7 +38,7 @@ public class BeatAnalysisSO : AnalysisSO
             {
                 if (spectrum[i] <= spectrum[i - 1] && spectrum[i] >= spectrum[i + 1])
                 {
-                    ResultList.Add(i);
+                    results.Add(i);
                     i += (int)waitSamples;
                 }
             }
@@ -46,6 +47,8 @@ public class BeatAnalysisSO : AnalysisSO
         analysed = true;
         lastClipName = Clip.name;
 
-        Debug.Log("Result: " + resultList.Count);
+        Debug.Log("Result: " + results.Count);
+
+        return results as List<int>;
     }
 }
