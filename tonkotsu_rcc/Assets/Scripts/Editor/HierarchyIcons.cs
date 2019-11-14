@@ -9,13 +9,15 @@ using System.Linq;
 [InitializeOnLoad]
 public class HierarchyIcons
 {
-    static Texture2D texture;
+    static Texture2D referenceTexture;
+    static Texture2D balanceTexture;
     static List<int> markedObjects;
 
     static HierarchyIcons()
     {
         // Init
-        texture = AssetDatabase.LoadAssetAtPath("Assets/Scripts/Editor/Textures/ExclamationMark.png", typeof(Texture2D)) as Texture2D;
+        referenceTexture = AssetDatabase.LoadAssetAtPath("Assets/Textures/ScriptingTextures/ExclamationMark.png", typeof(Texture2D)) as Texture2D;
+        balanceTexture = AssetDatabase.LoadAssetAtPath("Assets/Textures/ScriptingTextures/1200px-Question_mark_grey.svg.png", typeof(Texture2D)) as Texture2D;
         EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
         markedObjects = new List<int>();
     }
@@ -79,6 +81,6 @@ public class HierarchyIcons
         Rect r = new Rect(selectionRect);
         r.width = 20;
         r.x = r.width - 20;
-        GUI.Label(r, texture);
+        GUI.Label(r, referenceTexture);
     }
 }

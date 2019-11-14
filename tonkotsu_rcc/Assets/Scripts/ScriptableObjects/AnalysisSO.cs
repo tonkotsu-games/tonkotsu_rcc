@@ -9,7 +9,7 @@ public abstract class AnalysisSO : ScriptableObject
     [Tooltip("Clip that should be analysed.")]
     public AudioClip Clip;
 
-    protected List<int> resultList;
+    private List<int> resultList;
 
     [ShowNonSerializedField] 
     protected bool analysed;
@@ -19,9 +19,9 @@ public abstract class AnalysisSO : ScriptableObject
     protected float[] spectrum = null;
     public float[] Spectrum { get => spectrum; }
 
-    public List<int> ResultList { get => resultList; }
+    public List<int> ResultList { get => resultList; set => resultList = value; }
 
-    protected abstract void AnalyseClip();
+    public abstract List<int> AnalyseClip();
     
     protected virtual void OnValidate()
     {
