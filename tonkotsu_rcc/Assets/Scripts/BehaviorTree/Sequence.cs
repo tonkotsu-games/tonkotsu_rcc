@@ -2,7 +2,7 @@
 
 public class Sequence : BaseNode
 {
-    List<BaseNode> nodes = new List<BaseNode>();
+    private List<BaseNode> nodes = new List<BaseNode>();
 
     public Sequence(List<BaseNode> nodes)
     {
