@@ -1,13 +1,16 @@
-﻿public abstract class BaseNode
+﻿using UnityEngine;
+
+public abstract class BaseNodes
 {
     protected NodeState currentNodeState;
+
 
     public NodeState nodeState
     {
         get { return currentNodeState; }
     }
 
-    public BaseNode() { }
+    public BaseNodes() { }
 
     public abstract NodeState Evaluate();
 }
