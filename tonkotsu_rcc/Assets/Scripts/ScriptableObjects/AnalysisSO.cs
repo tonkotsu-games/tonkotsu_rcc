@@ -25,11 +25,11 @@ public abstract class AnalysisSO : ScriptableObject
     [Button]
     public virtual void Analyze()
     {
-        resultList = AnalyseClip();
-
         #if UNITY_EDITOR
         UnityEditor.Undo.RecordObject(this, "Analysis");
         #endif
+
+        resultList = AnalyseClip();
     }
 
     protected abstract List<int> AnalyseClip();

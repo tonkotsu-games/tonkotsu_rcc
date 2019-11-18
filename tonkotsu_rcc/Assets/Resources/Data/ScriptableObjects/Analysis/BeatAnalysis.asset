@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a807ff9105ad441abfea828385c269, type: 3}
   m_Name: BeatAnalysis
   m_EditorClassIdentifier: 
-  Clip: {fileID: 8300000, guid: 11911a539843d0647b6b3a8b70fd2a39, type: 3}
+  Clip: {fileID: 8300000, guid: 9abbd7f084c5e1140bc929471549c541, type: 3}
   limit: 0.4
   waitSamples: 5000
