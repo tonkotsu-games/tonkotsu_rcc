@@ -17,7 +17,7 @@ public class PlayerController : BeatBehaviour
     [SerializeField] float walkForce, dashForce, rayCastMaxDist;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float walkVelocity, dashVelocity;
+    [SerializeField] float walkVelocity, dashVelocity, rigidbodyDrag;
 
     [BoxGroup("States")]
     [ReadOnly]
@@ -58,6 +58,8 @@ public class PlayerController : BeatBehaviour
         UpdateMove(input);
         UpdateDash(input);
         UpdateAttack(input);
+
+        rigidbody.velocity = rigidbody.velocity * rigidbodyDrag;
     }
 
     private void LateUpdate()
