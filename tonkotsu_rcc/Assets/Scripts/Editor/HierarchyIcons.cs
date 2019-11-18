@@ -24,12 +24,10 @@ public class HierarchyIcons
 
     static void UpdateCB()
     {
-        Debug.LogError("Update CB");
-
         markedObjects = new List<int>();
 
         var foundGameObjects = Object.FindObjectsOfType (typeof(GameObject)) as GameObject[];
-        Debug.Log("found go: " + foundGameObjects.Length);
+        
         if (foundGameObjects.Length != 0)
         {
             foreach(GameObject go in foundGameObjects)
@@ -40,20 +38,26 @@ public class HierarchyIcons
                     FieldInfo[] fieldsRequired = GetAllRequired(components, i);
 
                     FieldInfo[] fieldsSerializeField = GetAllSerializedFields(fieldsRequired);
-                    Debug.Log("fields " + fieldsSerializeField.Length);
+                    
                     bool componentHasAllRef = true;
 
                     for (int j = 0; j < fieldsSerializeField.Length; j++)
                     {
                         if(fieldsSerializeField[j] != null)
                         {
+                            Debug.Log("fieldvalue " + fieldsSerializeField[j].GetValue(components[i]));
+
                             if (fieldsSerializeField[j].GetValue(components[i]) == null)
                             {
-                                componentHasAllRef = false;
+                                Debug.Log("CALLED");
+                                componentHasAllRef = false;                              
                             }
                         }                   
                     }
-                    if (componentHasAllRef == false)
+
+                    Debug.Log("allrefs " + componentHasAllRef);
+
+                    if (!componentHasAllRef)
                     {
                         markedObjects.Add(go.GetInstanceID());
                     }
@@ -86,14 +90,11 @@ public class HierarchyIcons
 
     static void HierarchyIconCB(int instanceID, Rect selectionRect)
     {
-
         // place the icoon to the right of the list:
         Rect r = new Rect(selectionRect);
         r.width = 20;
         r.x = r.width - 20;
 
-        //Debug.LogError("HierarchyIconCB");
-        //Debug.Log("markedObjects.Count: " + markedObjects.Count);
         if (markedObjects.Contains (instanceID)) 
         {
             GUI.Label(r, referenceTexture);
