@@ -2007,12 +2007,20 @@ MonoBehaviour:
   onBeatRangeDelay: 0
   camera: {fileID: 0}
   virtualController: {fileID: 668368666}
-  force: 200
+  walkForce: 300
+  dashForce: 1000
   rayCastMaxDist: 1
   walkVelocity: 3
+  dashVelocity: 7
   state: 0
+  walkToIdleTime: 0.5
+  attackTime: 1
+  dashTime: 0.5
+  timeTracker: 0
   animator: {fileID: 5939961681764191608}
   walkFloatParameter: MovementSpeed
+  dashBoolParameter: Dash
+  attackBoolParameter: Attack
 --- !u!95 &5939961681764191608
 Animator:
   serializedVersion: 3
