@@ -11,7 +11,6 @@ public class HierarchyIcons
 {
     static Texture2D referenceTexture;
     static Texture2D balanceTexture;
-    static List<int> markedObjects;
 
     static HierarchyIcons()
     {
@@ -19,20 +18,15 @@ public class HierarchyIcons
         referenceTexture = AssetDatabase.LoadAssetAtPath("Assets/Textures/ScriptingTextures/ExclamationMark.png", typeof(Texture2D)) as Texture2D;
         balanceTexture = AssetDatabase.LoadAssetAtPath("Assets/Textures/ScriptingTextures/1200px-Question_mark_grey.svg.png", typeof(Texture2D)) as Texture2D;
         EditorApplication.hierarchyWindowItemOnGUI += HierarchyIconCB;
-        EditorApplication.update += UpdateCB;
     }
 
-    static void UpdateCB()
+    static void HierarchyIconCB(int instanceID, Rect selectionRect)
     {
-        markedObjects = new List<int>();
-
-        var foundGameObjects = Object.FindObjectsOfType (typeof(GameObject)) as GameObject[];
+        var foundGameObjects = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
         
-        if (foundGameObjects.Length != 0)
+        if (foundGameObjects)
         {
-            foreach(GameObject go in foundGameObjects)
-            {
-                var components = go.GetComponents<Component>();
+                var components = foundGameObjects.GetComponents<Component>();
                 for (int i = 0; i < components.Length; i++)
                 {
                     FieldInfo[] fieldsRequired = GetAllRequired(components, i);
@@ -63,12 +57,11 @@ public class HierarchyIcons
                                     componentHasAllRef = false;
                                 }
                             }
-                        }                   
-                    }
+                        }
 
                     if (!componentHasAllRef)
                     {
-                        markedObjects.Add(go.GetInstanceID());
+                        DrawIcon(selectionRect);
                     }
                 }           
             }
@@ -96,16 +89,13 @@ public class HierarchyIcons
         return foundFields;
     }
 
-    static void HierarchyIconCB(int instanceID, Rect selectionRect)
+    static void DrawIcon(Rect selectionRect)
     {
         // place the icoon to the right of the list:
         Rect r = new Rect(selectionRect);
         r.width = 20;
         r.x = r.width - 20;
 
-        if (markedObjects.Contains (instanceID)) 
-        {
-            GUI.Label(r, referenceTexture);
-        }      
+        GUI.Label(r, referenceTexture);     
     }
 }
