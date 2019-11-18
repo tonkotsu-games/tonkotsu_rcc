@@ -23,6 +23,14 @@ public class PlayerController : BeatBehaviour
     [ReadOnly]
     [SerializeField] State state;
 
+    [BoxGroup("Animation")]
+    [Required]
+    [SerializeField] Animator animator;
+
+    [BoxGroup("Animation")]
+    [SerializeField] string walkFloatParameter;
+
+
     new Rigidbody rigidbody;
     Vector3 camStartingOffset;
 
@@ -37,14 +45,12 @@ public class PlayerController : BeatBehaviour
         var input =  virtualController.GetPackage();
 
         UpdateRotation();
+        UpdateAnimation();
 
         if (state != State.Attack)
         {
             UpdateMovement(input.LeftStick);
         }
-
-
-
     }
 
     private void LateUpdate()
@@ -112,6 +118,10 @@ public class PlayerController : BeatBehaviour
         }
     }
 
+    private void UpdateAnimation()
+    {
+        animator.SetFloat(walkFloatParameter, rigidbody.velocity.magnitude / walkVelocity);
+    }
 
     public enum State
     {
