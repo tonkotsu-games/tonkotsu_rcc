@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40a807ff9105ad441abfea828385c269, type: 3}
-  m_Name: BeatAnalysis 1
+  m_Script: {fileID: 11500000, guid: b1c5af566f4291b4cbcaf36f7bad7b15, type: 3}
+  m_Name: ManualBeat
   m_EditorClassIdentifier: 
-  Clip: {fileID: 8300000, guid: 9abbd7f084c5e1140bc929471549c541, type: 3}
-  limit: 0.4
-  waitSamples: 5000
+  Clip: {fileID: 8300000, guid: 1de1c175a24a75c4d99b3b7d65ad8b4d, type: 3}
+  samplePerBeat: 22000
+  initialSampleOffset: 0

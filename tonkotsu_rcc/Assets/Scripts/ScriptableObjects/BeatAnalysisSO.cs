@@ -10,7 +10,7 @@ public class BeatAnalysisSO : AnalysisSO
     private float limit = 0.4f, waitSamples = 5000f;
 
 
-    public override List<int> AnalyseClip()
+    protected override List<int> AnalyseClip()
     {
         if(Clip == null)
         {
