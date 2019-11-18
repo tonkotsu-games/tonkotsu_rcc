@@ -14,25 +14,32 @@ public class PlayerController : BeatBehaviour
     [SerializeField] VirtualController virtualController;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float force, rayCastMaxDist;
+    [SerializeField] float walkForce, dashForce, rayCastMaxDist;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float walkVelocity;
+    [SerializeField] float walkVelocity, dashVelocity, rigidbodyDrag;
 
-    [BoxGroup("PlayerController")]
+    [BoxGroup("States")]
     [ReadOnly]
     [SerializeField] State state;
+
+    [BoxGroup("States")]
+    [SerializeField] float walkToIdleTime, attackTime, dashTime;
+
+    [BoxGroup("States")]
+    [ReadOnly]
+    [SerializeField] float timeTracker;
 
     [BoxGroup("Animation")]
     [Required]
     [SerializeField] Animator animator;
 
     [BoxGroup("Animation")]
-    [SerializeField] string walkFloatParameter;
-
+    [SerializeField] string walkFloatParameter, dashBoolParameter, attackBoolParameter;
 
     new Rigidbody rigidbody;
     Vector3 camStartingOffset;
+
 
     private void Start()
     {
@@ -42,15 +49,17 @@ public class PlayerController : BeatBehaviour
 
     protected override void Update()
     {
+        base.Update();
+
         var input =  virtualController.GetPackage();
+        timeTracker -= Time.deltaTime;
 
-        UpdateRotation();
-        UpdateAnimation();
+        UpdateNone(input);
+        UpdateMove(input);
+        UpdateDash(input);
+        UpdateAttack(input);
 
-        if (state != State.Attack)
-        {
-            UpdateMovement(input.LeftStick);
-        }
+        rigidbody.velocity = rigidbody.velocity * rigidbodyDrag;
     }
 
     private void LateUpdate()
@@ -60,7 +69,7 @@ public class PlayerController : BeatBehaviour
 
     protected override void OnBeatRangeStay()
     {
-        if(state == State.Idle || state == State.Move)
+        if(state == State.None || state == State.Move)
         {
             if (virtualController.GetPackage().A)
             {
@@ -69,18 +78,9 @@ public class PlayerController : BeatBehaviour
         }
     }
 
-
-    private void UpdateMovement(Vector2 input)
+    private void Move(Vector3 inputDir, float force, float maxSpeed)
     {
-        Vector3 camForward = camera.transform.forward;
-        camForward.y = 0;
-        camForward.Normalize();
 
-        Vector3 camRight = camera.transform.right;
-        camRight.y = 0;
-        camRight.Normalize();
-
-        Vector3 inputDir = camForward*input.y + camRight*input.x;
         Ray r = new Ray(transform.position, inputDir);
 
         bool hit = Physics.Raycast(r, rayCastMaxDist);
@@ -123,11 +123,104 @@ public class PlayerController : BeatBehaviour
         animator.SetFloat(walkFloatParameter, rigidbody.velocity.magnitude / walkVelocity);
     }
 
+    private void UpdateNone(InputPackage input)
+    {
+        if(timeTracker <= 0)
+        {
+            state = State.None;
+            animator.SetBool(dashBoolParameter, false);
+            animator.SetBool(attackBoolParameter, false);
+        }
+    }
+
+    private void UpdateMove(InputPackage input)
+    {
+        if(state == State.None && input.LeftStickMoved())
+        {
+            state = State.Move;
+        }
+
+        if (state == State.Move)
+        {
+            UpdateRotation();
+            UpdateAnimation();
+
+            Vector3 camForward = camera.transform.forward;
+            camForward.y = 0;
+            camForward.Normalize();
+
+            Vector3 camRight = camera.transform.right;
+            camRight.y = 0;
+            camRight.Normalize();
+
+            Vector3 inputDir = camForward * input.LeftStick.y + camRight * input.LeftStick.x;
+            Move(inputDir, walkForce, walkVelocity);
+
+            if (input.LeftStickMoved())
+            {
+                timeTracker = walkToIdleTime;
+            }
+        }
+    }
+
+    private void UpdateDash(InputPackage input)
+    {
+        if (input.RB)
+        {
+            TryDash();
+        }
+        if (state == State.Dash)
+        {
+            Move(transform.forward, dashForce, dashVelocity);
+        }
+    }
+
+    private void UpdateAttack(InputPackage input)
+    {
+        if (input.LB)
+        {
+            TryAttack();
+        }
+
+        if(state == State.Attack)
+        {
+            UpdateRotation();
+        }
+    }
+
+    [Button]
+    private void TryDash()
+    {
+        if(state != State.Move && state != State.None)
+        {
+            return;
+        }
+
+        state = State.Dash;
+        timeTracker = dashTime;
+        animator.SetBool(dashBoolParameter, true);
+    }
+
+    [Button]
+    private void TryAttack()
+    {
+        if(state != State.Move && state != State.None)
+        {
+            return;
+        }
+
+        state = State.Attack;
+        timeTracker = attackTime;
+        animator.SetBool(attackBoolParameter, true);
+
+    }
+
     public enum State
     {
-        Idle,
+        None,
         Move,
-        Attack
+        Attack,
+        Dash
     }
 
 }
