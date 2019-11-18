@@ -17,11 +17,22 @@ public abstract class AnalysisSO : ScriptableObject
     protected string lastClipName = null;
 
     protected float[] spectrum = null;
+
     public float[] Spectrum { get => spectrum; }
-
     public List<int> ResultList { get => resultList; set => resultList = value; }
+    public bool Analysed { get => analysed; }
 
-    public abstract List<int> AnalyseClip();
+    [Button]
+    public virtual void Analyze()
+    {
+        resultList = AnalyseClip();
+
+        #if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(this, "Analysis");
+        #endif
+    }
+
+    protected abstract List<int> AnalyseClip();
     
     protected virtual void OnValidate()
     {

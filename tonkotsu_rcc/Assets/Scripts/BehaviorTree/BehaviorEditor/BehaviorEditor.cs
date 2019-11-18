@@ -126,11 +126,11 @@ public class BehaviorEditor : EditorWindow
         switch (actions)
         {
             case UserActions.AddNode:
-                StateEditorNode stateNode = new StateEditorNode
-                {
-                    windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300),
-                    windowTitle = "State"
-                };
+                StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
+                
+                stateNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
+                stateNode.windowTitle = "State";
+               
                 windows.Add(stateNode);
                 break;
             case UserActions.AddTransition:
