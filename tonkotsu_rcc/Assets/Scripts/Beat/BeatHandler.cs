@@ -10,7 +10,7 @@ public class BeatHandler : Singleton<BeatHandler>
     private int reactionTime = 0;
 
     [SerializeField]
-    private BeatAnalysisSO beatAnalysisSO;
+    private AnalysisSO beatAnalysis;
     [SerializeField]
     private List<Texture2D> spectrumTexture;
     [SerializeField]
@@ -30,17 +30,24 @@ public class BeatHandler : Singleton<BeatHandler>
     void Start()
     {
         sourceWave = GetComponent<AudioSource>();
-        beatListCopy = new List<int>(beatAnalysisSO.ResultList);
+
+        if (!beatAnalysis.Analysed)
+        {
+            Debug.LogWarning("Beat Analysis was not done. Analysing now...");
+            beatAnalysis.Analyze();
+        }
+        
+        beatListCopy = new List<int>(beatAnalysis.ResultList);
     }
 
     private void Update()
     {
-        if ((sourceWave.timeSamples >= beatAnalysisSO.ResultList[beatAnalysisSO.ResultList.Count - 1] && copy) || beatListCopy.Count == 0)
+        if ((sourceWave.timeSamples >= beatAnalysis.ResultList[beatAnalysis.ResultList.Count - 1] && copy) || beatListCopy.Count == 0)
         {
             copy = false;
-            beatListCopy = new List<int>(beatAnalysisSO.ResultList);
+            beatListCopy = new List<int>(beatAnalysis.ResultList);
         }
-        if (sourceWave.timeSamples <= beatAnalysisSO.ResultList[0] && !copy)
+        if (sourceWave.timeSamples <= beatAnalysis.ResultList[0] && !copy)
         {
             copy = true;
         }
@@ -68,7 +75,7 @@ public class BeatHandler : Singleton<BeatHandler>
 
     public static float BeatRangePercent(int onBeatRangeDelay, int onBeatRangeWindow)
     {
-        var beats = Instance.beatAnalysisSO.ResultList;
+        var beats = Instance.beatAnalysis.ResultList;
         timeSample = sourceWave.timeSamples - onBeatRangeDelay;
         for (int i = 0; i < beats.Count; i++)
         {
@@ -105,17 +112,17 @@ public class BeatHandler : Singleton<BeatHandler>
             float widthMulti = 1;
             int sampleJump = 1800;
 
-            for (int i = 0; i * sampleJump < beatAnalysisSO.Spectrum.Length; i++)
+            for (int i = 0; i * sampleJump < beatAnalysis.Spectrum.Length; i++)
             {
                 if (i > Screen.width - 1)
                 {
                     break;
                 }
-                GUI.DrawTexture(new Rect(visualOffsetX + i * widthMulti, 5, widthMulti, heightMulti * beatAnalysisSO.Spectrum[i * sampleJump]), spectrumTexture[0]);
+                GUI.DrawTexture(new Rect(visualOffsetX + i * widthMulti, 5, widthMulti, heightMulti * beatAnalysis.Spectrum[i * sampleJump]), spectrumTexture[0]);
             }
-            for (int j = 0; j < beatAnalysisSO.ResultList.Count; j++)
+            for (int j = 0; j < beatAnalysis.ResultList.Count; j++)
             {
-                GUI.DrawTexture(new Rect(visualOffsetX + beatAnalysisSO.ResultList[j] / sampleJump, 5, widthMulti, heightMulti), spectrumTexture[1]);
+                GUI.DrawTexture(new Rect(visualOffsetX + beatAnalysis.ResultList[j] / sampleJump, 5, widthMulti, heightMulti), spectrumTexture[1]);
             }
             GUI.DrawTexture(new Rect(visualOffsetX + sourceWave.timeSamples / sampleJump, 5, widthMulti, heightMulti * 1.1f), spectrumTexture[2]);
         }
