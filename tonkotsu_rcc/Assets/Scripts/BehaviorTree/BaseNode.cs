@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public abstract class BaseNodes
+
+public abstract class BaseNodes : ScriptableObject
 {
     protected NodeState currentNodeState;
 
