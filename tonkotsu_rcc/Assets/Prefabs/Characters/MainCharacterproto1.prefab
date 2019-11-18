@@ -2009,14 +2009,16 @@ MonoBehaviour:
   virtualController: {fileID: 668368666}
   walkForce: 300
   dashForce: 500
+  attackForce: 100
   rayCastMaxDist: 1
   walkVelocity: 3
   dashVelocity: 7
+  attackVelocity: 1
   rigidbodyDrag: 0.9
   state: 0
   walkToIdleTime: 0.5
-  attackTime: 1
-  dashTime: 0.5
+  attackTime: 0.3
+  dashTime: 0.3
   timeTracker: 0
   animator: {fileID: 5939961681764191608}
   walkFloatParameter: MovementSpeed

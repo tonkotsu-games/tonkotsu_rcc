@@ -14,10 +14,10 @@ public class PlayerController : BeatBehaviour
     [SerializeField] VirtualController virtualController;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float walkForce, dashForce, rayCastMaxDist;
+    [SerializeField] float walkForce, dashForce, attackForce, rayCastMaxDist;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float walkVelocity, dashVelocity, rigidbodyDrag;
+    [SerializeField] float walkVelocity, dashVelocity, attackVelocity, rigidbodyDrag;
 
     [BoxGroup("States")]
     [ReadOnly]
@@ -145,15 +145,7 @@ public class PlayerController : BeatBehaviour
             UpdateRotation();
             UpdateAnimation();
 
-            Vector3 camForward = camera.transform.forward;
-            camForward.y = 0;
-            camForward.Normalize();
-
-            Vector3 camRight = camera.transform.right;
-            camRight.y = 0;
-            camRight.Normalize();
-
-            Vector3 inputDir = camForward * input.LeftStick.y + camRight * input.LeftStick.x;
+            var inputDir = CameraDirectionFromInput(input);
             Move(inputDir, walkForce, walkVelocity);
 
             if (input.LeftStickMoved())
@@ -163,9 +155,23 @@ public class PlayerController : BeatBehaviour
         }
     }
 
+    private Vector3 CameraDirectionFromInput(InputPackage input)
+    {
+        Vector3 camForward = camera.transform.forward;
+        camForward.y = 0;
+        camForward.Normalize();
+
+        Vector3 camRight = camera.transform.right;
+        camRight.y = 0;
+        camRight.Normalize();
+
+        Vector3 inputDir = camForward * input.LeftStick.y + camRight * input.LeftStick.x;
+        return inputDir;
+    }
+
     private void UpdateDash(InputPackage input)
     {
-        if (input.RB)
+        if (input.RB && beatRangeCloseness > 0)
         {
             TryDash();
         }
@@ -177,7 +183,7 @@ public class PlayerController : BeatBehaviour
 
     private void UpdateAttack(InputPackage input)
     {
-        if (input.LB)
+        if (input.LB && beatRangeCloseness > 0)
         {
             TryAttack();
         }
@@ -185,6 +191,9 @@ public class PlayerController : BeatBehaviour
         if(state == State.Attack)
         {
             UpdateRotation();
+
+            var inputDir = CameraDirectionFromInput(input);
+            Move(inputDir, attackForce, attackVelocity);
         }
     }
 

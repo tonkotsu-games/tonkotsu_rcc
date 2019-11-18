@@ -42,9 +42,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.89619374
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0.2777779
+  m_ExitTime: 0.9605714
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -151,7 +151,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Dash
-  m_Speed: 2
+  m_Speed: 0
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -2229657295490470758}
@@ -164,7 +164,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 9edf1acc92dc3f441ba3a884b06850f8,
+  m_Motion: {fileID: -203655887218126122, guid: 337041e20ca1c2e48be7860e0522dd22,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -188,9 +188,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
-  m_ExitTime: 0.8584906
+  m_ExitTime: 0
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
