@@ -45,24 +45,32 @@ public class HierarchyIcons
                     {
                         if(fieldsSerializeField[j] != null)
                         {
-                            Debug.Log("fieldvalue " + fieldsSerializeField[j].GetValue(components[i]));
+                            var o = fieldsSerializeField[j].GetValue(components[i]);
 
-                            if (fieldsSerializeField[j].GetValue(components[i]) == null)
+
+                            if (o == null)
                             {
-                                Debug.Log("CALLED");
-                                componentHasAllRef = false;                              
+                                componentHasAllRef = false;
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string unassignedCheck = ((Object)o).name;
+                                }
+                                catch (UnassignedReferenceException unassigned)
+                                {
+                                    componentHasAllRef = false;
+                                }
                             }
                         }                   
                     }
-
-                    Debug.Log("allrefs " + componentHasAllRef);
 
                     if (!componentHasAllRef)
                     {
                         markedObjects.Add(go.GetInstanceID());
                     }
                 }           
-                Debug.Log(markedObjects.Count);
             }
         }
     }
