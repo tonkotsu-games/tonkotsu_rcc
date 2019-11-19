@@ -87,7 +87,6 @@ public class HierarchyIcons
                             
                             if (o.Equals(GetDefault(tp)))
                             {
-                                Debug.LogError("CALLED");
                                 componentHasAllRefBalance = false;
                             }
                         }
