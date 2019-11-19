@@ -13,6 +13,15 @@ public class ManualBeatAnalysisSO : AnalysisSO
     protected override List<int> AnalyseClip()
     {
         var results = new List<int>();
+        int amount = Clip.samples;
+        spectrum = new float[amount];
+
+        Clip.GetData(spectrum, 0);
+
+        for (int i = 0; i < spectrum.Length; i++)
+        {
+            spectrum[i] = Mathf.Abs(spectrum[i]);
+        }
 
         for (int i = initialSampleOffset; i < Clip.samples; i+= samplePerBeat)
         {

@@ -37,7 +37,7 @@ public class BehaviorEditor : EditorWindow
         mousePosition = events.mousePosition;
         UserInput(events);
         DrawWindows();
-        if(GUI.Button(new Rect(10, 10, 100, 20), "Clear Me"))
+        if (GUI.Button(new Rect(10, 10, 100, 20), "Clear Me"))
         {
             ClearMe();
         }
@@ -127,7 +127,7 @@ public class BehaviorEditor : EditorWindow
             menu.AddItem(new GUIContent("Delete Node"), false, CallBack, UserActions.DeleteNode);
         }
 
-        if(selectedNode is CommentEditorNode)
+        if (selectedNode is CommentEditorNode)
         {
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Delete Node"), false, CallBack, UserActions.DeleteNode);
@@ -143,16 +143,16 @@ public class BehaviorEditor : EditorWindow
         {
             case UserActions.AddNode:
                 StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
-                
+
                 stateNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
                 stateNode.windowTitle = "State";
-               
+
                 windows.Add(stateNode);
                 break;
             case UserActions.AddTransition:
                 break;
             case UserActions.DeleteNode:
-                if(selectedNode != null)
+                if (selectedNode != null)
                 {
                     windows.Remove(selectedNode);
                 }
@@ -167,11 +167,11 @@ public class BehaviorEditor : EditorWindow
                 break;
         }
 
-        #endregion
     }
 
     public void ClearMe()
     {
         windows.Clear();
     }
+    #endregion
 }

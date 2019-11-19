@@ -14,7 +14,7 @@ public class BeatHandler : Singleton<BeatHandler>
     [SerializeField]
     private List<Texture2D> spectrumTexture;
     [SerializeField]
-    [Range(0, 300)]
+    [Range(-300, 300)]
     private int visualOffsetX = 0;
 
     private static float timeSample = 0;
@@ -23,7 +23,6 @@ public class BeatHandler : Singleton<BeatHandler>
 
     private static bool beatVisualize = false;
     private bool copy = false;
-
 
     private static List<int> beatListCopy;
 
@@ -108,6 +107,7 @@ public class BeatHandler : Singleton<BeatHandler>
     {
         if (beatVisualize)
         {
+            Debug.Log(beatAnalysis.ResultList.Count);
             float heightMulti = 100;
             float widthMulti = 1;
             int sampleJump = 1800;
