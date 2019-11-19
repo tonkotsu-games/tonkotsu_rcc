@@ -37,7 +37,11 @@ public class PlayerController : BeatBehaviour
     [BoxGroup("Animation")]
     [SerializeField] string walkFloatParameter, dashBoolParameter, attackBoolParameter;
 
+    [BoxGroup("Animation")]
+    [SerializeField] float animationVelocityLerpSpeed = 0.1f;
+
     new Rigidbody rigidbody;
+    float animationVelocity;
     Vector3 camStartingOffset;
 
 
@@ -120,7 +124,8 @@ public class PlayerController : BeatBehaviour
 
     private void UpdateAnimation()
     {
-        animator.SetFloat(walkFloatParameter, rigidbody.velocity.magnitude / walkVelocity);
+        animationVelocity = Mathf.Lerp(animationVelocity, rigidbody.velocity.magnitude / walkVelocity, animationVelocityLerpSpeed);
+        animator.SetFloat(walkFloatParameter, animationVelocity);
     }
 
     private void UpdateNone(InputPackage input)
