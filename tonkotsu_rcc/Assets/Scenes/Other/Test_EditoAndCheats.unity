@@ -346,7 +346,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testValue: {fileID: 0}
-  testValueTwo: 0
+  testValueTwo: 1
+  three: 1
 --- !u!4 &967691840
 Transform:
   m_ObjectHideFlags: 0
@@ -406,6 +407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testValue: {fileID: 0}
   testValueTwo: 0
+  three: 0
 --- !u!1 &1799289243
 GameObject:
   m_ObjectHideFlags: 0

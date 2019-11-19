@@ -73,31 +73,22 @@ public class HierarchyIcons
                     
                     FieldInfo[] fieldsBalance = GetAllBalance(components, i);
 
-                    FieldInfo[] fieldsSerializeFieldInBalance = GetAllSerializedFields(fieldsRequired);
+                    FieldInfo[] fieldsSerializeFieldInBalance = GetAllSerializedFields(fieldsBalance);
                     
                     bool componentHasAllRefBalance = true;
 
-                    for (int k = 0; k < fieldsSerializeField.Length; k++)
+                    for (int k = 0; k < fieldsSerializeFieldInBalance.Length; k++)
                     {
-                        if(fieldsSerializeField[k] != null)
+                        if(fieldsSerializeFieldInBalance[k] != null)
                         {
-                            var o = fieldsSerializeField[k].GetValue(components[i]);
+                            var o = fieldsSerializeFieldInBalance[k].GetValue(components[i]);
 
-
-                            if (o == null)
+                            System.Type tp = o.GetType();
+                            
+                            if (o.Equals(GetDefault(tp)))
                             {
+                                Debug.LogError("CALLED");
                                 componentHasAllRefBalance = false;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    string unassignedCheck = ((Object)o).name;
-                                }
-                                catch (UnassignedReferenceException unassigned)
-                                {
-                                    componentHasAllRefBalance = false;
-                                }
                             }
                         }
                     }
@@ -159,5 +150,15 @@ public class HierarchyIcons
         r.x = r.width - 10;
 
         GUI.Label(r, referenceTextureBalance);     
+    }
+
+    private static object GetDefault(System.Type type)
+    {
+        if(type.IsValueType)
+        {
+            return System.Activator.CreateInstance(type);
+        }
+
+        return null;
     }
 }

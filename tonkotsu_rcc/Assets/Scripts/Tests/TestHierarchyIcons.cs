@@ -9,4 +9,5 @@ public class TestHierarchyIcons : MonoBehaviour
 {
     [Required][SerializeField] GameObject testValue;
     [Balance] [SerializeField] float testValueTwo;
+    [Balance] [SerializeField] int three;
 }
