@@ -178,7 +178,7 @@ public class PlayerController : BeatBehaviour
 
     private void UpdateDash(InputPackage input)
     {
-        if (input.LB && beatRangeCloseness > 0)
+        if ((input.LB || input.A) && beatRangeCloseness > 0)
         {
             TryDash();
         }
@@ -190,7 +190,7 @@ public class PlayerController : BeatBehaviour
 
     private void UpdateAttack(InputPackage input)
     {
-        if (input.RB && beatRangeCloseness > 0)
+        if ((input.RB || input.X) && beatRangeCloseness > 0)
         {
             TryAttack();
         }
