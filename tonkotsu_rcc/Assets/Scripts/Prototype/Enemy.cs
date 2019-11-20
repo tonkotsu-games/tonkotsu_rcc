@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using NaughtyAttributes;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamagable
 {
     [BoxGroup("Enemy")]
-    [SerializeField] float attackRange;
+    [SerializeField] float attackRange, ragdollForce;
+
+    [BoxGroup("Enemy")]
+    [SerializeField] GameObject ragdoll;
 
     [BoxGroup("Animation")]
     [SerializeField] string movingBoolParameter;
@@ -48,4 +51,20 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
+    public void TakeDamage(Damager source, ContactPoint contact)
+    {
+        Destroy(gameObject);
+        var rd = Instantiate(ragdoll, transform.position, transform.rotation);
+
+        var rbs = rd.GetComponentsInChildren<Rigidbody>();
+
+        foreach (var rb in rbs)
+        {
+            Vector3 dir = rb.transform.position - source.transform.position;
+
+            Vector3 force = dir.normalized * ragdollForce;
+
+            rb.AddForce(force);
+        }
+    }
 }
