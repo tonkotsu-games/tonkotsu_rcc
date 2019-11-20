@@ -8695,8 +8695,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useText: 0
-  useTexture: 0
-  texture: {fileID: 0}
+  useTexture: 1
+  texture: {fileID: 2800000, guid: 607e491fd72004b43aeeeefa3ae1bc84, type: 3}
   content: 
   color: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &1371646646
