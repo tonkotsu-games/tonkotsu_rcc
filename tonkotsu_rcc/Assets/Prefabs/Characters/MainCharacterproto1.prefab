@@ -2009,8 +2009,8 @@ MonoBehaviour:
   camera: {fileID: 0}
   virtualController: {fileID: 668368666}
   walkForce: 50
-  dashForce: 100
-  attackForce: 50
+  dashForce: 70
+  attackForce: 10
   rayCastMaxDist: 0
   walkVelocity: 5
   dashVelocity: 30
