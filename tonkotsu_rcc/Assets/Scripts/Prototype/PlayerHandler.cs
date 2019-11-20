@@ -1,15 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using NaughtyAttributes;
 public class PlayerHandler : Singleton<PlayerHandler>
 {
     [SerializeField] bool spawnPlayer;
-    [SerializeField] GameObject playerPrefab;
+    [SerializeField] GameObject autoBeatPlayer, multiBeatPlayer;
+
+    [ReadOnly]
+    [SerializeField] PlayerPrototypeType playerType;
 
     PlayerController player;
 
     public static Transform Player { get => Instance.GetPlayerTransform(); }
+
+    public static void ChangePrototypePlayer()
+    {
+        if(Instance.playerType == PlayerPrototypeType.AutoBeat)
+        {
+            Instance.ChangeToAutoBeat();
+        }
+        else
+        {
+            Instance.ChangeToMultiBeat();
+        }
+    }
 
     protected override void Awake()
     {
@@ -17,7 +32,7 @@ public class PlayerHandler : Singleton<PlayerHandler>
 
         if (spawnPlayer)
         {
-            var go = Instantiate(playerPrefab);
+            var go = Instantiate(autoBeatPlayer);
 
             player = go.GetComponent<PlayerController>();
         }
@@ -39,7 +54,6 @@ public class PlayerHandler : Singleton<PlayerHandler>
         }
     }
 
-
     private Transform GetPlayerTransform()
     {
         if(Instance.player != null)
@@ -55,6 +69,22 @@ public class PlayerHandler : Singleton<PlayerHandler>
 
             return go.transform;
         }
+    }
+
+    private void ChangeToAutoBeat()
+    {
+        playerType = PlayerPrototypeType.AutoBeat;
+    }
+
+    private void ChangeToMultiBeat()
+    {
+        playerType = PlayerPrototypeType.MultiBeat;
+    }
+
+    public enum PlayerPrototypeType
+    {
+        AutoBeat,
+        MultiBeat
     }
 
 }
