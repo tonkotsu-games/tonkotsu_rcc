@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 2110272345}
   - component: {fileID: 5168968960834599882}
   - component: {fileID: 402350411}
+  - component: {fileID: 1385168000492446181}
   m_Layer: 0
   m_Name: EnemyProto1
   m_TagString: Untagged
@@ -359,6 +360,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 20
+  ragdollForce: 700
+  ragdoll: {fileID: 8139484677318392416, guid: 992808647fb9a194c94afc8d670bc87a, type: 3}
   movingBoolParameter: Move
 --- !u!95 &402350411
 Animator:
@@ -379,6 +382,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!136 &1385168000492446181
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872910251648968010}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.759021
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.89338124, z: 0}
 --- !u!1 &874971529824981295
 GameObject:
   m_ObjectHideFlags: 0

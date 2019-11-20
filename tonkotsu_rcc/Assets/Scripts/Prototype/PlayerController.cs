@@ -40,6 +40,9 @@ public class PlayerController : BeatBehaviour
     [BoxGroup("Animation")]
     [SerializeField] float animationVelocityLerpSpeed = 0.1f;
 
+    [BoxGroup("Weapon")]
+    [SerializeField] GameObject weapon;
+
     new Rigidbody rigidbody;
     float animationVelocity;
     Vector3 camStartingOffset;
@@ -69,17 +72,6 @@ public class PlayerController : BeatBehaviour
     private void LateUpdate()
     {
         camera.transform.position = rigidbody.position + camStartingOffset;
-    }
-
-    protected override void OnBeatRangeStay()
-    {
-        if(state == State.None || state == State.Move)
-        {
-            if (virtualController.GetPackage().A)
-            {
-                //attack
-            }
-        }
     }
 
     private void Move(Vector3 inputDir, float force, float maxSpeed)
@@ -135,6 +127,8 @@ public class PlayerController : BeatBehaviour
             state = State.None;
             animator.SetBool(dashBoolParameter, false);
             animator.SetBool(attackBoolParameter, false);
+            animator.SetFloat(walkFloatParameter, 0);
+            weapon.SetActive(false);
         }
     }
 
@@ -226,7 +220,7 @@ public class PlayerController : BeatBehaviour
         state = State.Attack;
         timeTracker = attackTime;
         animator.SetBool(attackBoolParameter, true);
-
+        weapon.SetActive(true);
     }
 
     public enum State
