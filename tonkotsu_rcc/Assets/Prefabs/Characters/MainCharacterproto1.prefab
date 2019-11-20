@@ -2008,12 +2008,12 @@ MonoBehaviour:
   onBeatRangeDelay: 0
   camera: {fileID: 0}
   virtualController: {fileID: 668368666}
-  walkForce: 100
+  walkForce: 50
   dashForce: 100
-  attackForce: 100
+  attackForce: 50
   rayCastMaxDist: 0
-  walkVelocity: 10
-  dashVelocity: 40
+  walkVelocity: 5
+  dashVelocity: 30
   attackVelocity: 5
   rigidbodyDrag: 0.9
   maxRotPerAttackPerSec: 90
@@ -2523,11 +2523,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4504896224893582472}
     m_Modifications:
-    - target: {fileID: 4341692930627091707, guid: 2d51387acaa26c545b8ac818d308239e,
-        type: 3}
-      propertyPath: m_Name
-      value: MainCharacterWeapon
-      objectReference: {fileID: 0}
     - target: {fileID: 6363793857394706114, guid: 2d51387acaa26c545b8ac818d308239e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2582,6 +2577,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341692930627091707, guid: 2d51387acaa26c545b8ac818d308239e,
+        type: 3}
+      propertyPath: m_Name
+      value: MainCharacterWeapon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d51387acaa26c545b8ac818d308239e, type: 3}
