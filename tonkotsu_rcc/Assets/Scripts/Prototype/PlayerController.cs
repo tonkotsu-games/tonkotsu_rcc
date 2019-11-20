@@ -124,6 +124,11 @@ public class PlayerController : BeatBehaviour
     {
         if(timeTracker <= 0)
         {
+            if(state == State.Dash)
+            {
+                rigidbody.velocity = Vector3.zero;
+            }
+
             state = State.None;
             animator.SetBool(dashBoolParameter, false);
             animator.SetBool(attackBoolParameter, false);
@@ -176,7 +181,7 @@ public class PlayerController : BeatBehaviour
         }
         if (state == State.Dash)
         {
-            Move(transform.forward, dashForce, dashVelocity);
+            rigidbody.velocity = transform.forward * dashVelocity;
         }
     }
 
