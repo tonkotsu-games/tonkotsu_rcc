@@ -17,7 +17,7 @@ public class PlayerController : BeatBehaviour
     [SerializeField] float walkForce, dashForce, attackForce, rayCastMaxDist;
 
     [BoxGroup("PlayerController")]
-    [SerializeField] float walkVelocity, dashVelocity, attackVelocity, rigidbodyDrag;
+    [SerializeField] float walkVelocity, dashVelocity, attackVelocity, rigidbodyDrag, maxRotPerAttackPerSec, maxRotPerWalkPerSec;
 
     [BoxGroup("States")]
     [ReadOnly]
@@ -46,6 +46,7 @@ public class PlayerController : BeatBehaviour
     new Rigidbody rigidbody;
     float animationVelocity;
     Vector3 camStartingOffset;
+    float prevRotationAngle;
 
 
     private void Start()
@@ -101,16 +102,18 @@ public class PlayerController : BeatBehaviour
         
     }
 
-    private void UpdateRotation()
+    private void UpdateRotation(InputPackage input, float maxRotangle)
     {
-        Vector3 forward = rigidbody.velocity;
-        forward.y = 0;
+        Vector3 forward = new Vector3(input.LeftStick.x, 0, input.LeftStick.y);
 
         if(forward.magnitude > 0.01f)
         {
             transform.rotation = Quaternion.identity;
-            float angle = Vector3.Angle(Vector3.forward, forward); 
-            transform.Rotate(Vector3.up, (forward.x>0 ? angle : 360 - angle));
+            float angle = Vector3.Angle(Vector3.forward, forward);
+            angle = (forward.x > 0 ? angle : 360 - angle);
+            angle = Mathf.MoveTowardsAngle(prevRotationAngle, angle, maxRotangle);
+            prevRotationAngle = angle;
+            transform.Rotate(Vector3.up, angle);
         }
     }
 
@@ -146,10 +149,10 @@ public class PlayerController : BeatBehaviour
 
         if (state == State.Move)
         {
-            UpdateRotation();
+            UpdateRotation(input, maxRotPerWalkPerSec * Time.deltaTime);
             UpdateAnimation();
 
-            var inputDir = CameraDirectionFromInput(input);
+            var inputDir = CameraDirectionFromInput(input.LeftStick);
             Move(inputDir, walkForce, walkVelocity);
 
             if (input.LeftStickMoved())
@@ -159,7 +162,7 @@ public class PlayerController : BeatBehaviour
         }
     }
 
-    private Vector3 CameraDirectionFromInput(InputPackage input)
+    private Vector3 CameraDirectionFromInput(Vector2 movInput)
     {
         Vector3 camForward = camera.transform.forward;
         camForward.y = 0;
@@ -169,7 +172,7 @@ public class PlayerController : BeatBehaviour
         camRight.y = 0;
         camRight.Normalize();
 
-        Vector3 inputDir = camForward * input.LeftStick.y + camRight * input.LeftStick.x;
+        Vector3 inputDir = camForward * movInput.y + camRight * movInput.x;
         return inputDir;
     }
 
@@ -194,9 +197,10 @@ public class PlayerController : BeatBehaviour
 
         if(state == State.Attack)
         {
-            UpdateRotation();
+            UpdateRotation(input, maxRotPerAttackPerSec * Time.deltaTime);
 
-            var inputDir = CameraDirectionFromInput(input);
+            Vector2 inputLeftStick = new Vector2(transform.forward.x, transform.forward.z);
+            var inputDir = CameraDirectionFromInput(inputLeftStick);
             Move(inputDir, attackForce, attackVelocity);
         }
     }
