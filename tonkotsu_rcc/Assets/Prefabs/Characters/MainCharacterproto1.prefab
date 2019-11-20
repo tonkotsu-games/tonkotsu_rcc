@@ -2016,9 +2016,11 @@ MonoBehaviour:
   dashVelocity: 40
   attackVelocity: 5
   rigidbodyDrag: 0.9
+  maxRotPerAttackPerSec: 90
+  maxRotPerWalkPerSec: 720
   state: 0
   walkToIdleTime: 0.5
-  attackTime: 0.3
+  attackTime: 0.35
   dashTime: 0.25
   timeTracker: 0
   animator: {fileID: 5939961681764191608}
