@@ -92,12 +92,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24efbebb3c1141b4b9e4953f2b38d130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onBeatRangeWindow: 40000
+  onBeatRangeWindow: 20000
   onBeatRangeDelay: 0
   colorGradiant:
     serializedVersion: 2
     key0: {r: 0, g: 0.948827, b: 1, a: 1}
-    key1: {r: 1, g: 0, b: 0.6945772, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
