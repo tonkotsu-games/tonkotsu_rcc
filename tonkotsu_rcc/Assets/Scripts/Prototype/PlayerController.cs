@@ -67,7 +67,7 @@ public class PlayerController : BeatBehaviour
         UpdateDash(input);
         UpdateAttack(input);
 
-        rigidbody.velocity = rigidbody.velocity * rigidbodyDrag;
+        rigidbody.velocity = new Vector3(rigidbody.velocity.x * rigidbodyDrag, rigidbody.velocity.y, rigidbody.velocity.z * rigidbodyDrag);
     }
 
     private void LateUpdate()
