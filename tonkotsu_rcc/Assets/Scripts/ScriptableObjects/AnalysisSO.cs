@@ -5,14 +5,15 @@ using NaughtyAttributes;
 
 public abstract class AnalysisSO : ScriptableObject
 {
-    [Header("Clip to Analyse-------")]
+    [Header("Clip to Analyse")]
     [Tooltip("Clip that should be analysed.")]
     public AudioClip Clip;
 
-    private List<int> resultList;
+    [ReadOnly]
+    public List<int> resultList;
 
-    [ShowNonSerializedField] 
-    protected bool analysed;
+    [ReadOnly]
+    public bool analysed;
 
     protected string lastClipName = null;
 
@@ -25,10 +26,15 @@ public abstract class AnalysisSO : ScriptableObject
     [Button]
     public virtual void Analyze()
     {
+        #if UNITY_EDITOR
+        UnityEditor.Undo.RecordObject(this, "Analysis");
+        #endif
+        
         resultList = AnalyseClip();
 
         #if UNITY_EDITOR
-        UnityEditor.Undo.RecordObject(this, "Analysis");
+        UnityEditor.EditorUtility.SetDirty(this);
+        UnityEditor.AssetDatabase.SaveAssets();
         #endif
     }
 
