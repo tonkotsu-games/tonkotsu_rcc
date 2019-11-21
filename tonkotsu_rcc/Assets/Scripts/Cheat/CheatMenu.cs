@@ -10,7 +10,6 @@ public class CheatMenu : Singleton<CheatMenu>
     [SerializeField] VirtualController virtualController;
     [SerializeField] Texture2D[] virtualControllerTextures;
 
-    List<int> markedObjects;
     List<MethodInfo> methodsList = new List<MethodInfo>();
     List<Component> componentListToMethod = new List<Component>();
 
@@ -21,8 +20,6 @@ public class CheatMenu : Singleton<CheatMenu>
     protected override void Awake()
     {
         base.Awake();
-
-        markedObjects = new List<int>();
 
         if(virtualController == null)
         {
@@ -145,7 +142,7 @@ public class CheatMenu : Singleton<CheatMenu>
         int allowedButtons = buttonsInRow;
         foreach(var method in methodsList)
         {
-            if(GUI.Button(new Rect(200 + offsetX, 130 + offsetY, 150, 50), method.ToString()))
+            if(GUI.Button(new Rect(200 + offsetX, 130 + offsetY, 200, 50), componentListToMethod[index].gameObject.name + " " + method.Name.ToString()))
             {
                 method.Invoke(componentListToMethod[index], null);
             }
