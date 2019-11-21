@@ -6,6 +6,6 @@ using UnityEngine;
 public class Transition
 {
     public Condition condition;
-    public BaseNodes targetNode;
+    public  State targetState;
     public bool disable;
 }

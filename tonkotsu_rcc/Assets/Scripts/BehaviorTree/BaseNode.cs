@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
+[CreateAssetMenu]
 public abstract class BaseNodes : ScriptableObject
 {
+    
     protected NodeState currentNodeState;
 
-    public List<Transition> transitions = new List<Transition>();
 
     public NodeState nodeState
     {
@@ -17,10 +17,4 @@ public abstract class BaseNodes : ScriptableObject
 
     public abstract NodeState Evaluate();
 
-    public Transition AddTransition()
-    {
-        Transition transitionValue = new Transition();
-        transitions.Add(transitionValue);
-        return transitionValue;
-    }
 }

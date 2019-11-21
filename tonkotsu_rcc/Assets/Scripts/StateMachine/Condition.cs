@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class Condition : ScriptableObject
 {
-    public abstract bool checkCondition(NodeState currentState);
+    public abstract bool checkCondition(StateManager state);
 }

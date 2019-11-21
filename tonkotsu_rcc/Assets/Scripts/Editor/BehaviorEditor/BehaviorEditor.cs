@@ -11,6 +11,10 @@ public class BehaviorEditor : EditorWindow
     bool makeTransition;
     bool clickedOnWindow;
     BaseEditorNodes selectedNode;
+    static Texture2D texture;
+
+    public static BehaviorGraph currentGraph;
+    static GraphNode graphNode;
 
     public enum UserActions
     {
@@ -27,12 +31,31 @@ public class BehaviorEditor : EditorWindow
     {
         BehaviorEditor editor = EditorWindow.GetWindow<BehaviorEditor>();
         editor.minSize = new Vector2(800, 600);
+
+        texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        texture.SetPixel(0, 0, new Color(.149f, .1843f, .2314f));
+        texture.Apply();
     }
+
+    private void OnEnable()
+    {
+        if (graphNode == null)
+        {
+            graphNode = CreateInstance<GraphNode>();
+            graphNode.windowRect = new Rect(10, position.height * 0.7f, 200, 100);
+            graphNode.windowTitle = "Graph";
+        }
+        windows.Clear();
+        windows.Add(graphNode);
+        LoadGraph();
+    }
+
     #endregion
 
     #region GUI Methods
     private void OnGUI()
     {
+        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), texture, ScaleMode.StretchToFill);
         Event events = Event.current;
         mousePosition = events.mousePosition;
         UserInput(events);
@@ -43,6 +66,7 @@ public class BehaviorEditor : EditorWindow
         }
 
     }
+
 
     void DrawWindows()
     {
@@ -110,8 +134,16 @@ public class BehaviorEditor : EditorWindow
     {
         GenericMenu menu = new GenericMenu();
         menu.AddSeparator("");
-        menu.AddItem(new GUIContent("Add State"), false, CallBack, UserActions.AddNode);
-        menu.AddItem(new GUIContent("Add Comment"), false, CallBack, UserActions.AddCommentNode);
+        if (currentGraph != null)
+        {
+            menu.AddItem(new GUIContent("Add State"), false, CallBack, UserActions.AddNode);
+            menu.AddItem(new GUIContent("Add Comment"), false, CallBack, UserActions.AddCommentNode);
+        }
+        else
+        {
+            menu.AddDisabledItem(new GUIContent("Add State"));
+            menu.AddDisabledItem(new GUIContent("Add Comment"));
+        }
         menu.ShowAsContext();
         events.Use();
     }
@@ -157,10 +189,7 @@ public class BehaviorEditor : EditorWindow
         switch (actions)
         {
             case UserActions.AddNode:
-                StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
-                stateNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
-                stateNode.windowTitle = "State";
-                windows.Add(stateNode);
+                AddStateEditorNode(mousePosition);
                 break;
             case UserActions.AddTransition:
                 if (selectedNode is StateEditorNode)
@@ -197,10 +226,7 @@ public class BehaviorEditor : EditorWindow
                 }
                 break;
             case UserActions.AddCommentNode:
-                CommentEditorNode commentNode = ScriptableObject.CreateInstance<CommentEditorNode>();
-                commentNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 100);
-                commentNode.windowTitle = "Comment";
-                windows.Add(commentNode);
+                AddComment(mousePosition);
                 break;
         }
     }
@@ -224,6 +250,25 @@ public class BehaviorEditor : EditorWindow
     #endregion
 
     #region Helper Methods
+    public static StateEditorNode AddStateEditorNode(Vector2 position)
+    {
+        StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
+        stateNode.windowRect = new Rect(position.x, position.y, 200, 300);
+        stateNode.windowTitle = "State";
+        windows.Add(stateNode);
+        currentGraph.SetStateNode(stateNode);
+        return stateNode;
+    }
+
+    public static CommentEditorNode AddComment(Vector2 position)
+    {
+        CommentEditorNode commentNode = ScriptableObject.CreateInstance<CommentEditorNode>();
+        commentNode.windowRect = new Rect(position.x, position.y, 200, 100);
+        commentNode.windowTitle = "Comment";
+        windows.Add(commentNode);
+        return commentNode;
+    }
+
     public static TransitionEditorNode AddTransitionNode(int index, Transition transition, StateEditorNode stateNode)
     {
         Rect stateNodeRect = stateNode.windowRect;
@@ -235,21 +280,32 @@ public class BehaviorEditor : EditorWindow
         }
 
         stateNodeRect.y = targetY;
+        stateNodeRect.x += 200 + 100;
+        stateNodeRect.y += (stateNodeRect.height * 0.7f);
 
+        Vector2 position = new Vector2(stateNodeRect.x, stateNodeRect.y);
+
+        return AddTransition(position, transition, stateNode);
+
+    }
+
+    public static TransitionEditorNode AddTransition(Vector2 position, Transition transition, StateEditorNode stateNode)
+    {
         TransitionEditorNode transitionNode = ScriptableObject.CreateInstance<TransitionEditorNode>();
         transitionNode.Init(stateNode, transition);
-        transitionNode.windowRect = new Rect(stateNodeRect.x + 200 + 100, stateNodeRect.y + (stateNodeRect.height * 0.7f), 200, 80);
+        transitionNode.windowRect = new Rect(position.x, position.y, 200, 80);
         transitionNode.windowTitle = "Condition Check";
         windows.Add(transitionNode);
         stateNode.dependecies.Add(transitionNode);
         return transitionNode;
+
     }
 
     public static void DrawNodeCurve(Rect start, Rect end, bool left, Color curveColor)
     {
         Vector2 startPosition = new Vector2(
             (left) ? start.x + start.width : start.x,
-            start.y + (start.height * 0.5f));
+            start.y + 50);
 
         Vector2 endPosition = new Vector2(end.x + (end.width * 0.5f), end.y + (end.height * 0.5f));
         Vector2 startTransition = startPosition + Vector2.right * 50;
@@ -257,11 +313,26 @@ public class BehaviorEditor : EditorWindow
 
         Color shadow = Color.black;
 
-        for (int i = 0; i < 3; i++)
+        Handles.DrawBezier(startPosition, endPosition, startTransition, endTransition, curveColor, null, 2.5f);
+    }
+
+    public static void LoadGraph()
+    {
+        windows.Clear();
+        windows.Add(graphNode);
+
+        currentGraph.Init();
+
+        List<SavedStateNode> savedNode = new List<SavedStateNode>();
+        savedNode.AddRange(currentGraph.savedStateNodes);
+        currentGraph.savedStateNodes.Clear();
+
+        for (int index = savedNode.Count - 1; index >= 0; index--)
         {
-            Handles.DrawBezier(startPosition, endPosition, startTransition, endTransition, shadow, null, 1);
+            StateEditorNode node = AddStateEditorNode(savedNode[index].position);
+            node.currentState = savedNode[index].state;
+            currentGraph.SetStateNode(node);
         }
-        Handles.DrawBezier(startPosition, endPosition, startTransition, endTransition, curveColor, null, 1);
     }
     #endregion
 }

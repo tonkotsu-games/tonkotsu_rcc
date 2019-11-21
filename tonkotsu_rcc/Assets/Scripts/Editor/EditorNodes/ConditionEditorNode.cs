@@ -5,5 +5,4 @@ using UnityEngine;
 public class ConditionEditorNode : BaseEditorNodes
 {
     NodeState currentState;
-
 }
