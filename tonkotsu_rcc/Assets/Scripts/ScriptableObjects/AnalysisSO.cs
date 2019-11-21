@@ -20,7 +20,7 @@ public abstract class AnalysisSO : ScriptableObject
     protected float[] spectrum = null;
 
     public float[] Spectrum { get => spectrum; }
-    public List<int> ResultList { get => resultList; set => resultList = value; }
+    public List<int> ResultList { get => resultList;}
     public bool Analysed { get => analysed; }
 
     [Button]
