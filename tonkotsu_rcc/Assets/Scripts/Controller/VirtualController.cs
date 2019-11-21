@@ -2,6 +2,11 @@
 using NaughtyAttributes;
 using UnityEngine;
 
+//////////////////////
+/// Input wrapper used to get input in the project,  simulates a XBoxController input
+/// Is on top of the Unity Input system and hides it's implementation
+//////////////////////
+
 public class VirtualController : MonoBehaviour
 {
     [SerializeField] VirtualControllerInputType startingInputType;
@@ -31,11 +36,18 @@ public class VirtualController : MonoBehaviour
         currentProvider = newType.GetProvider();
     }
 
+
+    /////////////////////
+    ///Main method to get input, has a running time of 1, returns an on update updated InputPackage
+    ////////////////////
     public InputPackage GetPackage()
     {
         return currentPackage;
     }
 
+    ////////////////////
+    /// Should be called in OnGUI, renders the virtual controller to the screen
+    ///////////////////
     public void DrawGUI(Texture2D[] controllerTextures)
     {
         float screenHeight = Screen.height;
