@@ -14,6 +14,9 @@ public class PlayerController : BeatBehaviour
     [SerializeField] VirtualController virtualController;
 
     [BoxGroup("PlayerController")]
+    [SerializeField] bool secondPrototype;
+
+    [BoxGroup("PlayerController")]
     [SerializeField] float walkForce, dashForce, attackForce, rayCastMaxDist;
 
     [BoxGroup("PlayerController")]
@@ -64,8 +67,17 @@ public class PlayerController : BeatBehaviour
 
         UpdateNone(input);
         UpdateMove(input);
-        UpdateDash(input);
-        UpdateAttack(input);
+        UpdateDash(input, noPerfectInput: secondPrototype);
+
+        if (secondPrototype)
+        {
+
+        }
+        else
+        {
+            UpdateAutoAttack(input);
+        }
+
 
         rigidbody.velocity = new Vector3(rigidbody.velocity.x * rigidbodyDrag, rigidbody.velocity.y, rigidbody.velocity.z * rigidbodyDrag);
     }
@@ -176,19 +188,30 @@ public class PlayerController : BeatBehaviour
         return inputDir;
     }
 
-    private void UpdateDash(InputPackage input)
+    private void UpdateDash(InputPackage input, bool noPerfectInput)
     {
-        if ((input.LB || input.A) && beatRangeCloseness > 0)
+        if(noPerfectInput)
         {
-            TryDash();
+            if ((input.LB || input.A) && beatRangeCloseness > 0)
+            {
+                TryDash();
+            }
         }
+        else
+        {
+            if ((input.LB || input.A))
+            {
+                TryDash();
+            }
+        }
+
         if (state == State.Dash)
         {
             rigidbody.velocity = transform.forward * dashVelocity;
         }
     }
 
-    private void UpdateAttack(InputPackage input)
+    private void UpdateAutoAttack(InputPackage input)
     {
         if ((input.RB || input.X) && beatRangeCloseness > 0)
         {
@@ -202,6 +225,19 @@ public class PlayerController : BeatBehaviour
             Vector2 inputLeftStick = new Vector2(transform.forward.x, transform.forward.z);
             var inputDir = CameraDirectionFromInput(inputLeftStick);
             Move(inputDir, attackForce, attackVelocity);
+        }
+    }
+
+    private void UpdateMultiBeatAttack(InputPackage input)
+    {
+        if ((input.RB || input.X))
+        {
+            TryAttack();
+        }
+
+        if (state == State.Attack)
+        {
+
         }
     }
 
