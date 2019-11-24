@@ -5,56 +5,75 @@ using UnityEngine;
 [CreateAssetMenu]
 public class BehaviorGraph : ScriptableObject
 {
-    public List<SavedStateNode> savedStateNodes = new List<SavedStateNode>();
-    Dictionary<StateEditorNode, SavedStateNode> stateNodesDictionary = new Dictionary<StateEditorNode, SavedStateNode>();
-    Dictionary<State, StateEditorNode> stateDictionary = new Dictionary<State, StateEditorNode>();
+    public List<BaseEditorNodes> windows = new List<BaseEditorNodes>();
+    public int idCount;
+    List<int> indexToDelete = new List<int>();
 
-    public void Init()
+    #region Checkers
+    public BaseEditorNodes GetNodeWithIndex(int index)
     {
-        stateNodesDictionary.Clear();
-        stateDictionary.Clear();
-    }
-
-    public void SetStateNode(StateEditorNode node)
-    {
-        SavedStateNode savedNodes = GetSavedState(node);
-        if(savedNodes == null)
+        for (int i = 0; i < windows.Count; i++)
         {
-            savedNodes = new SavedStateNode();
-            savedStateNodes.Add(savedNodes);
-            stateNodesDictionary.Add(node, savedNodes);
+            if (windows[i].id == index)
+            {
+                return windows[i];
+            }
         }
-        savedNodes.state = node.currentState;
-        savedNodes.position = new Vector2(node.windowRect.x, node.windowRect.y);
+        return null;
     }
 
-    public void ClearStateNode(StateEditorNode node)
+    public void DeleteWindowIfNeeded()
     {
-        SavedStateNode savedNodes = GetSavedState(node);
-        if(savedNodes != null)
+        for (int index = 0; index < indexToDelete.Count; index++)
         {
-            savedStateNodes.Remove(savedNodes);
-            stateNodesDictionary.Remove(node);
+            BaseEditorNodes baseNode = GetNodeWithIndex(indexToDelete[index]);
+            if (baseNode != null)
+            {
+                windows.Remove(baseNode);
+            }
         }
+        indexToDelete.Clear();
     }
 
-    SavedStateNode GetSavedState(StateEditorNode node)
+    public void DeleteNode(int index)
     {
-        SavedStateNode savedNodes = null;
-        stateNodesDictionary.TryGetValue(node, out savedNodes);
-        return savedNodes;
+        indexToDelete.Add(index);
     }
-}
 
-[System.Serializable]
-public class SavedStateNode
-{
-    public State state;
-    public Vector2 position;
-}
+    public bool IsStateEditorNodeDuplicate(BaseEditorNodes baseNode)
+    {
+        for (int index = 0; index < windows.Count; index++)
+        {
+            if (windows[index].id == baseNode.id)
+            {
+                continue;
+            }
+            if (windows[index].stateReferences.currentState == baseNode.stateReferences.currentState && !windows[index].isDuplicate)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-[System.Serializable]
-public class SavedTransitions
-{
+    public bool IsTransitionNodeDuplicate(BaseEditorNodes baseNode)
+    {
+        BaseEditorNodes baseNodeCheck = GetNodeWithIndex(baseNode.enterNode);
+        if (baseNodeCheck == null)
+        {
+            return false;
+        }
 
+        for (int i = 0; i < baseNodeCheck.stateReferences.currentState.transitions.Count; i++)
+        {
+            Transition transition = baseNode.stateReferences.currentState.transitions[i];
+            if (transition.condition == baseNode.transitionReference.previousCondition &&
+                baseNode.transitionReference.transitionId != transition.id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    #endregion
 }

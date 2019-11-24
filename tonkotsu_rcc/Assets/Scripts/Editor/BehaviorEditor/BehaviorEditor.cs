@@ -6,15 +6,14 @@ using UnityEditor;
 public class BehaviorEditor : EditorWindow
 {
     #region Variables
-    static List<BaseEditorNodes> windows = new List<BaseEditorNodes>();
     Vector2 mousePosition;
     bool makeTransition;
     bool clickedOnWindow;
+    int selectedIndex;
     BaseEditorNodes selectedNode;
     static Texture2D texture;
 
-    public static BehaviorGraph currentGraph;
-    static GraphNode graphNode;
+    public static EditorSettings editorSettings;
 
     public enum UserActions
     {
@@ -39,15 +38,7 @@ public class BehaviorEditor : EditorWindow
 
     private void OnEnable()
     {
-        if (graphNode == null)
-        {
-            graphNode = CreateInstance<GraphNode>();
-            graphNode.windowRect = new Rect(10, position.height * 0.7f, 200, 100);
-            graphNode.windowTitle = "Graph";
-        }
-        windows.Clear();
-        windows.Add(graphNode);
-        LoadGraph();
+        editorSettings = Resources.Load("EditorSettings") as EditorSettings;
     }
 
     #endregion
@@ -60,36 +51,53 @@ public class BehaviorEditor : EditorWindow
         mousePosition = events.mousePosition;
         UserInput(events);
         DrawWindows();
+
+        if (events.type == EventType.MouseDrag)
+        {
+            editorSettings.currentGraph.DeleteWindowIfNeeded();
+            Repaint();
+        }
+
         if (GUI.Button(new Rect(10, 10, 100, 20), "Clear Me"))
         {
             ClearMe();
         }
-
     }
-
 
     void DrawWindows()
     {
         BeginWindows();
-        foreach (BaseEditorNodes node in windows)
+        EditorGUILayout.LabelField(" ", GUILayout.Width(100));
+        EditorGUILayout.LabelField("Assign Graph ", GUILayout.Width(100));
+        editorSettings.currentGraph = (BehaviorGraph)EditorGUILayout.ObjectField(editorSettings.currentGraph, typeof(BehaviorGraph), false, GUILayout.Width(200));
+
+        if (editorSettings.currentGraph != null)
         {
-            node.DrawCurve();
-        }
-        for (int i = 0; i < windows.Count; i++)
-        {
-            windows[i].windowRect = GUI.Window(i, windows[i].windowRect, DrawNodeWindow, windows[i].windowTitle);
+            foreach (BaseEditorNodes node in editorSettings.currentGraph.windows)
+            {
+                node.DrawCurve();
+            }
+            for (int i = 0; i < editorSettings.currentGraph.windows.Count; i++)
+            {
+                editorSettings.currentGraph.windows[i].windowRect = GUI.Window(i, editorSettings.currentGraph.windows[i].windowRect,
+                                                                               DrawNodeWindow, editorSettings.currentGraph.windows[i].windowTitle);
+            }
         }
         EndWindows();
     }
 
     void DrawNodeWindow(int id)
     {
-        windows[id].DrawWindow();
+        editorSettings.currentGraph.windows[id].DrawWindow();
         GUI.DragWindow();
     }
 
     void UserInput(Event events)
     {
+        if (editorSettings.currentGraph == null)
+        {
+            return;
+        }
         if (events.button == 1 && !makeTransition)
         {
             if (events.type == EventType.MouseDown)
@@ -109,13 +117,15 @@ public class BehaviorEditor : EditorWindow
 
     void RightClick(Event events)
     {
-        selectedNode = null;
-        for (int i = 0; i < windows.Count; i++)
+
+        selectedIndex = -1;
+        for (int i = 0; i < editorSettings.currentGraph.windows.Count; i++)
         {
-            if (windows[i].windowRect.Contains(events.mousePosition))
+            if (editorSettings.currentGraph.windows[i].windowRect.Contains(events.mousePosition))
             {
                 clickedOnWindow = true;
-                selectedNode = windows[i];
+                selectedNode = editorSettings.currentGraph.windows[i];
+                selectedIndex = i;
                 break;
             }
         }
@@ -134,7 +144,7 @@ public class BehaviorEditor : EditorWindow
     {
         GenericMenu menu = new GenericMenu();
         menu.AddSeparator("");
-        if (currentGraph != null)
+        if (editorSettings.currentGraph != null)
         {
             menu.AddItem(new GUIContent("Add State"), false, CallBack, UserActions.AddNode);
             menu.AddItem(new GUIContent("Add Comment"), false, CallBack, UserActions.AddCommentNode);
@@ -151,10 +161,10 @@ public class BehaviorEditor : EditorWindow
     void ModifyNode(Event events)
     {
         GenericMenu menu = new GenericMenu();
-        if (selectedNode is StateEditorNode)
+        if (selectedNode.drawNode is StateEditorNode)
         {
-            StateEditorNode stateNode = (StateEditorNode)selectedNode;
-            if (stateNode.currentState != null)
+            StateEditorNode stateNode = (StateEditorNode)selectedNode.drawNode;
+            if (selectedNode.stateReferences.currentState != null)
             {
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Add Transition"), false, CallBack, UserActions.AddTransition);
@@ -168,13 +178,13 @@ public class BehaviorEditor : EditorWindow
             menu.AddItem(new GUIContent("Delete Node"), false, CallBack, UserActions.DeleteNode);
         }
 
-        if (selectedNode is CommentEditorNode)
+        if (selectedNode.drawNode is CommentEditorNode)
         {
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Delete Node"), false, CallBack, UserActions.DeleteNode);
         }
 
-        if (selectedNode is TransitionEditorNode)
+        if (selectedNode.drawNode is TransitionEditorNode)
         {
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Delete Node"), false, CallBack, UserActions.DeleteNode);
@@ -189,51 +199,29 @@ public class BehaviorEditor : EditorWindow
         switch (actions)
         {
             case UserActions.AddNode:
-                AddStateEditorNode(mousePosition);
+                editorSettings.AddNodeOnGraph(editorSettings.stateNode, 200, 100, "State", mousePosition);
                 break;
             case UserActions.AddTransition:
-                if (selectedNode is StateEditorNode)
-                {
-                    StateEditorNode stateTransitionNode = (StateEditorNode)selectedNode;
-                    Transition transition = stateTransitionNode.AddTransition();
-                    AddTransitionNode(stateTransitionNode.currentState.transitions.Count, transition, stateTransitionNode);
-                }
-                break;
-            case UserActions.DeleteNode:
-                if (selectedNode != null)
-                {
-                    if (selectedNode is StateEditorNode)
-                    {
-                        StateEditorNode stateTransitionNode = (StateEditorNode)selectedNode;
-                        stateTransitionNode.ClearReference();
-                        windows.Remove(stateTransitionNode);
-                    }
-                    if (selectedNode is TransitionEditorNode)
-                    {
-                        TransitionEditorNode target = (TransitionEditorNode)selectedNode;
-                        windows.Remove(target);
+                BaseEditorNodes transitionNode = editorSettings.AddNodeOnGraph(editorSettings.transitionNode, 200, 100, "Condition", mousePosition);
+                transitionNode.enterNode = selectedNode.id;
+                Transition transition = editorSettings.stateNode.AddTransition(selectedNode);
+                transitionNode.transitionReference.transitionId = transition.id;
 
-                        if (target.enterState.currentState.transitions.Contains(target.targetTransition))
-                        {
-                            target.enterState.currentState.transitions.Remove(target.targetTransition);
-                        }
-                    }
-                    if (selectedNode is CommentEditorNode)
-                    {
-                        windows.Remove(selectedNode);
-                    }
-
-                }
                 break;
             case UserActions.AddCommentNode:
-                AddComment(mousePosition);
+                BaseEditorNodes commentNode = editorSettings.AddNodeOnGraph(editorSettings.commentNode, 200, 100, "Comment", mousePosition);
+                commentNode.comment = "This is a Comment";
+                break;
+            case UserActions.DeleteNode:
+                editorSettings.currentGraph.DeleteNode(selectedNode.id);
                 break;
         }
+        EditorUtility.SetDirty(editorSettings);
     }
 
     public void ClearMe()
     {
-        windows.Clear();
+        editorSettings.currentGraph.windows.Clear();
 
     }
 
@@ -241,65 +229,15 @@ public class BehaviorEditor : EditorWindow
     {
         for (int i = 0; i < stateList.Count; i++)
         {
-            if (windows.Contains(stateList[i]))
+            if (editorSettings.currentGraph.windows.Contains(stateList[i]))
             {
-                windows.Remove(stateList[i]);
+                editorSettings.currentGraph.windows.Remove(stateList[i]);
             }
         }
     }
     #endregion
 
     #region Helper Methods
-    public static StateEditorNode AddStateEditorNode(Vector2 position)
-    {
-        StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
-        stateNode.windowRect = new Rect(position.x, position.y, 200, 300);
-        stateNode.windowTitle = "State";
-        windows.Add(stateNode);
-        currentGraph.SetStateNode(stateNode);
-        return stateNode;
-    }
-
-    public static CommentEditorNode AddComment(Vector2 position)
-    {
-        CommentEditorNode commentNode = ScriptableObject.CreateInstance<CommentEditorNode>();
-        commentNode.windowRect = new Rect(position.x, position.y, 200, 100);
-        commentNode.windowTitle = "Comment";
-        windows.Add(commentNode);
-        return commentNode;
-    }
-
-    public static TransitionEditorNode AddTransitionNode(int index, Transition transition, StateEditorNode stateNode)
-    {
-        Rect stateNodeRect = stateNode.windowRect;
-        stateNodeRect.y += 50;
-        float targetY = stateNodeRect.y - stateNodeRect.height;
-        if (stateNode.currentState != null)
-        {
-            targetY += (index * 100);
-        }
-
-        stateNodeRect.y = targetY;
-        stateNodeRect.x += 200 + 100;
-        stateNodeRect.y += (stateNodeRect.height * 0.7f);
-
-        Vector2 position = new Vector2(stateNodeRect.x, stateNodeRect.y);
-
-        return AddTransition(position, transition, stateNode);
-
-    }
-
-    public static TransitionEditorNode AddTransition(Vector2 position, Transition transition, StateEditorNode stateNode)
-    {
-        TransitionEditorNode transitionNode = ScriptableObject.CreateInstance<TransitionEditorNode>();
-        transitionNode.Init(stateNode, transition);
-        transitionNode.windowRect = new Rect(position.x, position.y, 200, 80);
-        transitionNode.windowTitle = "Condition Check";
-        windows.Add(transitionNode);
-        stateNode.dependecies.Add(transitionNode);
-        return transitionNode;
-
-    }
 
     public static void DrawNodeCurve(Rect start, Rect end, bool left, Color curveColor)
     {
@@ -316,23 +254,57 @@ public class BehaviorEditor : EditorWindow
         Handles.DrawBezier(startPosition, endPosition, startTransition, endTransition, curveColor, null, 2.5f);
     }
 
-    public static void LoadGraph()
-    {
-        windows.Clear();
-        windows.Add(graphNode);
+    //public static StateEditorNode AddStateEditorNode(Vector2 position)
+    //{
+    //    StateEditorNode stateNode = ScriptableObject.CreateInstance<StateEditorNode>();
+    //    stateNode.windowRect = new Rect(position.x, position.y, 200, 300);
+    //    stateNode.windowTitle = "State";
+    //    editorSettings.currentGraph.windows.Add(stateNode);
+    //    //currentGraph.SetStateNode(stateNode);
+    //    return stateNode;
+    //}
+    //
+    //public static CommentEditorNode AddComment(Vector2 position)
+    //{
+    //    CommentEditorNode commentNode = ScriptableObject.CreateInstance<CommentEditorNode>();
+    //    commentNode.windowRect = new Rect(position.x, position.y, 200, 100);
+    //    commentNode.windowTitle = "Comment";
+    //    editorSettings.currentGraph.windows.Add(commentNode);
+    //    return commentNode;
+    //}
+    //
+    //public static TransitionEditorNode AddTransitionNode(int index, Transition transition, StateEditorNode stateNode)
+    //{
+    //    Rect stateNodeRect = stateNode.windowRect;
+    //    stateNodeRect.y += 50;
+    //    float targetY = stateNodeRect.y - stateNodeRect.height;
+    //    if (stateNode.currentState != null)
+    //    {
+    //        targetY += (index * 100);
+    //    }
+    //
+    //    stateNodeRect.y = targetY;
+    //    stateNodeRect.x += 200 + 100;
+    //    stateNodeRect.y += (stateNodeRect.height * 0.7f);
+    //
+    //    Vector2 position = new Vector2(stateNodeRect.x, stateNodeRect.y);
+    //
+    //    return AddTransition(position, transition, stateNode);
+    //
+    //}
+    //
+    //public static TransitionEditorNode AddTransition(Vector2 position, Transition transition, StateEditorNode stateNode)
+    //{
+    //    TransitionEditorNode transitionNode = ScriptableObject.CreateInstance<TransitionEditorNode>();
+    //    transitionNode.Init(stateNode, transition);
+    //    transitionNode.windowRect = new Rect(position.x, position.y, 200, 80);
+    //    transitionNode.windowTitle = "Condition Check";
+    //    editorSettings.currentGraph.windows.Add(transitionNode);
+    //    stateNode.dependecies.Add(transitionNode);
+    //    return transitionNode;
+    //
+    //}
 
-        currentGraph.Init();
 
-        List<SavedStateNode> savedNode = new List<SavedStateNode>();
-        savedNode.AddRange(currentGraph.savedStateNodes);
-        currentGraph.savedStateNodes.Clear();
-
-        for (int index = savedNode.Count - 1; index >= 0; index--)
-        {
-            StateEditorNode node = AddStateEditorNode(savedNode[index].position);
-            node.currentState = savedNode[index].state;
-            currentGraph.SetStateNode(node);
-        }
-    }
     #endregion
 }

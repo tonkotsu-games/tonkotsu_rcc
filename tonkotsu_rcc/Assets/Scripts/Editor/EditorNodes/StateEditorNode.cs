@@ -6,60 +6,57 @@ using UnityEditorInternal;
 using System;
 using System.IO;
 
-
-public class StateEditorNode : BaseEditorNodes
+[CreateAssetMenu(menuName = "Behavior Editor/Nodes/State Node")]
+public class StateEditorNode : DrawNode
 {
-    bool collapse;
-    public State currentState;
-    State previousState;
-
-    SerializedObject serializedState;
-    ReorderableList stateOnExecuteList;
-    ReorderableList stateOnEnterList;
-    ReorderableList stateOnExitList;
-
-    public List<BaseEditorNodes> dependecies = new List<BaseEditorNodes>();
-
-    public override void DrawWindow()
+    public override void DrawWindow(BaseEditorNodes baseNode)
     {
-        if (currentState == null)
+        if (baseNode.stateReferences.currentState == null)
         {
             EditorGUILayout.LabelField("Add state to modify: ");
         }
         else
         {
-            if (collapse)
+            if (baseNode.collapse)
             {
-                windowRect.height = 100;
+                baseNode.windowRect.height = 100;
             }
-            collapse = EditorGUILayout.Toggle(" ", collapse);
+            baseNode.collapse = EditorGUILayout.Toggle(" ", baseNode.collapse);
         }
 
-        currentState = (State)EditorGUILayout.ObjectField(currentState, typeof(State), false);
+        baseNode.stateReferences.currentState = (State)EditorGUILayout.ObjectField(baseNode.stateReferences.currentState, typeof(State), false);
 
-        if(previousState != currentState)
+        if (baseNode.previousCollapse != baseNode.collapse)
         {
-            serializedState = null;
-
-            previousState = currentState;
-
-            BehaviorEditor.currentGraph.SetStateNode(this);
-            for (int i = 0; i < currentState.transitions.Count; i++)
-            {
-
-            }
+            baseNode.previousCollapse = baseNode.collapse;
         }
-        if(currentState != null)
-        {
-            if(serializedState == null)
-            {
-                serializedState = new SerializedObject(currentState);
-                stateOnEnterList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnEnter"), true, true, true, true);
-                stateOnExecuteList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnExecute"), true, true, true, true);
-                stateOnExitList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnExit"), true, true, true, true);
-            }
 
-            if(!collapse)
+        if (baseNode.stateReferences.previousState != baseNode.stateReferences.currentState)
+        {
+            //baseNode.serializedState = null;
+            baseNode.isDuplicate = BehaviorEditor.editorSettings.currentGraph.IsStateEditorNodeDuplicate(baseNode);
+        }
+
+        if (baseNode.isDuplicate)
+        {
+            EditorGUILayout.LabelField("State is a duplicate");
+            baseNode.windowRect.height = 100;
+            return;
+        }
+
+        if (baseNode.stateReferences.currentState != null)
+        {
+            SerializedObject serializedState = new SerializedObject(baseNode.stateReferences.currentState);
+
+            ReorderableList stateOnEnterList;
+            ReorderableList stateOnExecuteList;
+            ReorderableList stateOnExitList;
+
+            stateOnEnterList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnEnter"), true, true, true, true);
+            stateOnExecuteList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnExecute"), true, true, true, true);
+            stateOnExitList = new ReorderableList(serializedState, serializedState.FindProperty("stateOnExit"), true, true, true, true);
+
+            if (!baseNode.collapse)
             {
                 serializedState.Update();
                 HandleReordableList(stateOnEnterList, "On Enter");
@@ -76,8 +73,8 @@ public class StateEditorNode : BaseEditorNodes
                 serializedState.ApplyModifiedProperties();
 
                 float standardRectHeight = 300;
-                standardRectHeight += (stateOnEnterList.count + stateOnExecuteList.count + stateOnExitList.count+2) * 20;
-                windowRect.height = standardRectHeight;
+                standardRectHeight += (stateOnEnterList.count + stateOnExecuteList.count + stateOnExitList.count + 2) * 20;
+                baseNode.windowRect.height = standardRectHeight;
             }
         }
     }
@@ -96,19 +93,19 @@ public class StateEditorNode : BaseEditorNodes
         };
     }
 
-    public override void DrawCurve()
+    public override void DrawCurve(BaseEditorNodes baseNode)
     {
 
     }
 
-    public Transition AddTransition()
+    public Transition AddTransition(BaseEditorNodes baseNode)
     {
-        return currentState.AddTransition();
+        return baseNode.stateReferences.currentState.AddTransition();
     }
 
     public void ClearReference()
     {
-        BehaviorEditor.ClearList(dependecies);
-        dependecies.Clear();
+        //BehaviorEditor.ClearList(dependecies);
+        //dependecies.Clear();
     }
 }

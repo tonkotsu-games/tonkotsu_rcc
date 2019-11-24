@@ -9,6 +9,7 @@ public class State : ScriptableObject
     public StateAction[] stateOnEnter;
     public StateAction[] stateOnExit;
 
+    public int idCount;
     public List<Transition> transitions = new List<Transition>();
     
     public void OnEnter(StateManager state)
@@ -57,8 +58,22 @@ public class State : ScriptableObject
 
     public Transition AddTransition()
     {
-        Transition transitionValue = new Transition();
-        transitions.Add(transitionValue);
-        return transitionValue;
+        Transition returnValue = new Transition();
+        transitions.Add(returnValue);
+        returnValue.id = idCount;
+        idCount++;
+        return returnValue;
+    }
+
+    public Transition GetTransition(int id)
+    {
+        for(int i = 0; i< transitions.Count;i++)
+        {
+            if(transitions[i].id == id)
+            {
+                return transitions[i];
+            }
+        }
+        return null;
     }
 }

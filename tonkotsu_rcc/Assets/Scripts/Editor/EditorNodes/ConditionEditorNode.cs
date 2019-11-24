@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConditionEditorNode : BaseEditorNodes
+[CreateAssetMenu]
+public class ConditionEditorNode : Condition
 {
-    NodeState currentState;
+    public override bool checkCondition(StateManager state)
+    {
+        throw new System.NotImplementedException();
+    }
 }
