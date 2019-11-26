@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59a9a8b200c77f439916567cd53586d, type: 3}
   m_Name: EditorSettings
   m_EditorClassIdentifier: 
-  currentGraph: {fileID: 11400000, guid: a1be49fa355b4114785a075f8589e118, type: 2}
-  stateNode: {fileID: 11400000, guid: 5b076b9ead952fd499b4f0babf902895, type: 2}
-  transitionNode: {fileID: 11400000, guid: 57d3b48d8ce02bc4fb96f935793605f9, type: 2}
-  commentNode: {fileID: 11400000, guid: 801f043a64731ee498fad8cd8fe43b68, type: 2}
+  currentGraph: {fileID: 11400000, guid: 254d3edcec84e8842a4ba4a627ddc27c, type: 2}
+  stateNode: {fileID: 11400000, guid: c686e3df71bf4db41b2fe2f5075dedf2, type: 2}
+  portalNode: {fileID: 11400000, guid: ba5c85d6e8229bd498e3bcbf394203fe, type: 2}
+  transitionNode: {fileID: 11400000, guid: b84201ff99d72cd42919510a697b3827, type: 2}
+  commentNode: {fileID: 11400000, guid: 1519cb85df4c980488dcaf2d8f13b779, type: 2}
+  makeTransition: 0

@@ -44,6 +44,10 @@ public class StateNodeReferences
     public State currentState;
     [HideInInspector]
     public State previousState;
+    public SerializedObject serializedState;
+    public ReorderableList stateOnEnterList;
+    public ReorderableList stateOnExecuteList;
+    public ReorderableList stateOnExitList;
 }
 
 [System.Serializable]

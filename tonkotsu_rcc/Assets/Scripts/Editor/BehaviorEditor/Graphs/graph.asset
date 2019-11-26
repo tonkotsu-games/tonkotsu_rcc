@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5404c391d9e4945428cc99104f39147c, type: 3}
-  m_Name: zz
+  m_Script: {fileID: 11500000, guid: 44c6fdc626e46264a8393b1488e78f4a, type: 3}
+  m_Name: graph
   m_EditorClassIdentifier: 
-  stateOnExecute: []
-  stateOnEnter: []
-  stateOnExit: []
-  transitions: []
+  windows: []
+  idCount: 0

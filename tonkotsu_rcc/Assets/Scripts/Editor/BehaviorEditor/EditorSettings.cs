@@ -7,8 +7,10 @@ public class EditorSettings : ScriptableObject
 {
     public BehaviorGraph currentGraph;
     public StateEditorNode stateNode;
+    public PortalEditorNode portalNode;
     public TransitionEditorNode transitionNode;
     public CommentEditorNode commentNode;
+    public bool makeTransition;
 
     public BaseEditorNodes AddNodeOnGraph(DrawNode type,float width,float height,string title, Vector2 position)
     {

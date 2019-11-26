@@ -76,4 +76,17 @@ public class State : ScriptableObject
         }
         return null;
     }
+
+    public void RemoveTransition(int id)
+    {
+        Transition returnValue = GetTransition(id);
+        for (int i = 0; i < transitions.Count; i++)
+        {
+            if (transitions[i].id == returnValue.id)
+            {
+                transitions.Remove(returnValue);
+                idCount--;
+            }
+        }
+    }    
 }
