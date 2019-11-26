@@ -7,12 +7,14 @@ public class BehaviorEditor : EditorWindow
 {
     #region Variables
     Vector2 mousePosition;
+    Rect mouseRect = new Rect(0,0,1,1);
     bool clickedOnWindow;
     int selectedIndex;
     int transit;
     BaseEditorNodes selectedNode;
+    Vector2 scrollPosition;
     static Texture2D texture;
-    Rect mouseRect = new Rect(0,0,1,1);
+    public static StateManager currentStateManager;
 
     public static EditorSettings editorSettings;
     
